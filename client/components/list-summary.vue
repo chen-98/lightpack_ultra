@@ -6,6 +6,31 @@
         cursor: pointer;
     }
 }
+
+.lpInsights {
+    clear: both;
+    display: flex;
+    gap: 30px;
+    margin: 20px 0;
+
+    h3 {
+        font-size: 14px;
+        margin: 0 0 8px;
+    }
+
+    ol {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 4px;
+    }
+}
+
+.lpInsightMeta {
+    color: #777;
+}
 </style>
 
 <template>
@@ -95,6 +120,32 @@
                 </li>
             </ul>
         </div>
+        <div v-if="insights.topCategories.length || insights.topItems.length" class="lpInsights">
+            <section v-if="insights.topCategories.length">
+                <h3>Heaviest Categories</h3>
+                <ol>
+                    <li v-for="category in insights.topCategories" :key="category.id">
+                        {{ category.name || 'Unnamed category' }}
+                        <span class="lpInsightMeta">
+                            {{ category.weight | displayWeight(library.totalUnit) }} {{ library.totalUnit }}
+                            ({{ Math.round(category.percent * 100) }}%)
+                        </span>
+                    </li>
+                </ol>
+            </section>
+            <section v-if="insights.topItems.length">
+                <h3>Heaviest Gear</h3>
+                <ol>
+                    <li v-for="item in insights.topItems" :key="item.categoryId + '-' + item.id">
+                        {{ item.name }}
+                        <span class="lpInsightMeta">
+                            {{ item.weight | displayWeight(library.totalUnit) }} {{ library.totalUnit }}
+                            <span v-if="item.qty > 1">x {{ item.qty }}</span>
+                        </span>
+                    </li>
+                </ol>
+            </section>
+        </div>
     </div>
 </template>
 
@@ -130,6 +181,9 @@ export default {
                 category.activeHover = (this.hoveredCategoryId === category.id);
                 return category;
             });
+        },
+        insights() {
+            return this.list.getWeightInsights();
         },
     },
     watch: {

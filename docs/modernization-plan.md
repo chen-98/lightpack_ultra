@@ -344,7 +344,7 @@ Item.gearTags = []
 
 ### Task 4.2: 重量洞察面板
 
-状态：待开始
+状态：完成
 
 目标：
 
@@ -368,6 +368,13 @@ Item.gearTags = []
 - worn 和 consumable 的计算语义不被改变。
 - 有单元测试覆盖洞察数据生成逻辑，或至少有可复用 fixture。
 - `npm run check` 通过。
+
+实现：
+
+- `List.getWeightInsights()` 生成最重分类和最重装备数据。
+- 客户端 list summary 展示最重分类 Top 3 和最重装备 Top 5。
+- 洞察装备重量按 `item.weight * qty` 计算。
+- 新增单元测试覆盖洞察排序和重量计算。
 
 ### Task 4.3: 分享页增强
 

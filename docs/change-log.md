@@ -28,3 +28,4 @@
 | 2026-05-10 | Task 1.2: 核心业务测试 | 补充 `dataTypes` 单元测试，覆盖 worn/consumable 统计、删除引用、复制清单、保存加载等核心行为 | `npm run test:unit`; `npm run check` | `test: cover core library data behavior` |
 | 2026-05-10 | Task 3.1: 装备标签和分类筛选体系 | 为装备增加 `gearTags`；支持默认分类 tag、行内 tag 编辑、Gear 侧栏 tag 筛选和旧数据兼容 | `npm run test:unit`; `npm run check` | `feat: add gear tags and sidebar filtering` |
 | 2026-05-10 | Task 4.1: 快速录入模式 | 支持 Enter 连续新增装备；支持粘贴多行 `名称 + 重量 + 单位` 批量录入；新增 quick-entry 解析测试 | `npm run test:unit`; `npm run check` | `feat: add quick entry shortcuts` |
+| 2026-05-10 | Task 4.2: 重量洞察面板 | 新增 `List.getWeightInsights()`；在列表摘要中展示最重分类和最重装备；增加洞察排序单元测试 | `npm run test:unit`; `npm run check` | `feat: add weight insights panel` |

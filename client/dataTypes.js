@@ -345,6 +345,48 @@ List.prototype.calculateTotals = function () {
     this.totalQty = totalQty;
 };
 
+List.prototype.getWeightInsights = function () {
+    this.calculateTotals();
+    const categories = [];
+    const items = [];
+
+    for (const i in this.categoryIds) {
+        const category = this.library.getCategoryById(this.categoryIds[i]);
+        if (!category) {
+            continue;
+        }
+        category.calculateSubtotal();
+        if (category.subtotalWeight > 0) {
+            categories.push({
+                id: category.id,
+                name: category.name,
+                weight: category.subtotalWeight,
+                percent: this.totalWeight ? category.subtotalWeight / this.totalWeight : 0,
+            });
+        }
+        for (const j in category.categoryItems) {
+            const categoryItem = category.categoryItems[j];
+            const item = this.library.getItemById(categoryItem.itemId);
+            if (!item || item.isEmpty()) {
+                continue;
+            }
+            items.push({
+                id: item.id,
+                categoryId: category.id,
+                categoryName: category.name,
+                name: item.name,
+                qty: categoryItem.qty,
+                weight: item.weight * categoryItem.qty,
+            });
+        }
+    }
+
+    return {
+        topCategories: categories.sort((a, b) => b.weight - a.weight).slice(0, 3),
+        topItems: items.sort((a, b) => b.weight - a.weight).slice(0, 5),
+    };
+};
+
 List.prototype.save = function () {
     const out = assignIn({}, this);
     delete out.library;

@@ -191,3 +191,28 @@ test('gear tag list is derived from named items only', () => {
 
     assert.deepEqual(library.getGearTags(), ['Shelter', 'sleep']);
 });
+
+test('weight insights rank categories and items by carried weight', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const firstCategory = library.getCategoryById(list.categoryIds[0]);
+    const firstItem = library.getItemById(firstCategory.categoryItems[0].itemId);
+    const secondCategory = library.newCategory({ list });
+    const secondItem = library.newItem({ category: secondCategory });
+
+    firstCategory.name = 'Sleep';
+    firstItem.name = 'Quilt';
+    firstItem.weight = weight.WeightToMg(20, 'oz');
+    firstCategory.categoryItems[0].qty = 1;
+
+    secondCategory.name = 'Water';
+    secondItem.name = 'Bottle';
+    secondItem.weight = weight.WeightToMg(12, 'oz');
+    secondCategory.categoryItems[0].qty = 2;
+
+    const insights = list.getWeightInsights();
+
+    assert.equal(insights.topCategories[0].name, 'Water');
+    assert.equal(insights.topItems[0].name, 'Bottle');
+    assert.equal(insights.topItems[0].weight, weight.WeightToMg(24, 'oz'));
+});
