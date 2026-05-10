@@ -168,6 +168,13 @@ const store = new Vuex.Store({
             category.color = updatedCategory.color;
         },
         updateItem(state, item) {
+            const oldItem = state.library.getItemById(item.id);
+            if (oldItem && !oldItem.name && item.name && (!oldItem.gearTags || !oldItem.gearTags.length)) {
+                const category = state.library.findCategoryWithItemById(item.id, state.library.defaultListId);
+                if (category && category.name) {
+                    item.gearTags = [category.name];
+                }
+            }
             state.library.updateItem(item);
             state.library.getListById(state.library.defaultListId).calculateTotals();
         },
@@ -235,6 +242,7 @@ const store = new Vuex.Store({
                 item.weight = weightUtils.WeightToMg(parseFloat(row.weight), row.unit);
                 item.authorUnit = row.unit;
                 category.name = row.category;
+                item.gearTags = row.category ? [row.category] : [];
             }
             list.calculateTotals();
             state.library.defaultListId = list.id;

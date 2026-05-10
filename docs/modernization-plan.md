@@ -221,7 +221,7 @@
 
 ### Task 3.1: 装备标签和分类筛选体系
 
-状态：待开始
+状态：完成
 
 目标：
 
@@ -299,6 +299,15 @@ Item.gearTags = []
 - 后续 `GearType` 可以基于 `gearTags` 或独立字段继续标准化，不阻塞当前实现。
 - 从装备库拉取装备到某个清单时，不需要重复录入装备基础信息。
 - `npm run check` 通过。
+
+实现：
+
+- `Item.gearTags` 保存装备本体标签，旧数据加载时默认补为 `[]`。
+- 新装备在有名称的 list category 下创建时，会继承当前 category name 作为默认 tag。
+- 装备行支持用逗号分隔编辑多个 tag。
+- Gear 侧栏支持 All、Uncategorized 和已有 tag 筛选。
+- Gear 侧栏搜索同时匹配装备名称、描述和 tag。
+- `Library.getGearTags()` 和 `normalizeGearTags()` 提供可测试的数据边界。
 
 ### Task 4.1: 快速录入模式
 

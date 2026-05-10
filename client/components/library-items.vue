@@ -19,6 +19,15 @@
     padding: 3px 6px;
 }
 
+#libraryTagFilter {
+    background: #666;
+    border: 1px solid #888;
+    color: #fff;
+    margin-bottom: 15px;
+    padding: 3px 6px;
+    width: 100%;
+}
+
 .lpLibraryItem {
     border-top: 1px dotted #999;
     list-style: none;
@@ -65,6 +74,16 @@
         width: 235px;
     }
 
+    .lpTags {
+        clear: both;
+        color: #bbb;
+        display: block;
+        font-size: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 235px;
+    }
+
     .lpHandle {
         height: 80px;
         left: 0;
@@ -99,6 +118,11 @@
     <section id="libraryContainer">
         <h2>Gear</h2>
         <input id="librarySearch" v-model="searchText" type="text" placeholder="search items">
+        <select id="libraryTagFilter" v-model="selectedTag">
+            <option value="">All gear</option>
+            <option value="__uncategorized">Uncategorized</option>
+            <option v-for="tag in availableTags" :key="tag" :value="tag">{{ tag }}</option>
+        </select>
         <ul id="library">
             <li v-for="item in filteredItems" class="lpLibraryItem" :data-item-id="item.id">
                 <a v-if="item.url" :href="item.url" target="_blank" class="lpName lpHref">{{ item.name }}</a>
@@ -109,6 +133,9 @@
                 </span>
                 <span class="lpDescription">
                     {{ item.description }}
+                </span>
+                <span v-if="item.gearTags && item.gearTags.length" class="lpTags">
+                    {{ item.gearTags.join(', ') }}
                 </span>
                 <a class="lpRemove lpRemoveLibraryItem speedbump" title="Delete this item permanently" @click="removeItem(item)"><i class="lpSprite lpSpriteRemove" /></a>
                 <div v-if="!item.inCurrentList" class="lpHandle lpLibraryItemHandle" title="Reorder this item" />
@@ -129,6 +156,7 @@ export default {
     data() {
         return {
             searchText: '',
+            selectedTag: '',
             itemDragId: false,
             drake: null,
         };
@@ -142,14 +170,22 @@ export default {
             let item;
             let filteredItems = [];
             const namedItems = this.library.getNamedItems();
+            let sourceItems = namedItems;
+            if (this.selectedTag === '__uncategorized') {
+                sourceItems = sourceItems.filter(item => !item.gearTags || !item.gearTags.length);
+            } else if (this.selectedTag) {
+                const selectedTag = this.selectedTag.toLowerCase();
+                sourceItems = sourceItems.filter(item => (item.gearTags || []).some(tag => tag.toLowerCase() === selectedTag));
+            }
+
             if (!this.searchText) {
-                filteredItems = namedItems.map(item => Vue.util.extend({}, item));
+                filteredItems = sourceItems.map(item => Vue.util.extend({}, item));
             } else {
                 const lowerCaseSearchText = this.searchText.toLowerCase();
 
-                for (i = 0; i < namedItems.length; i++) {
-                    item = namedItems[i];
-                    if (item.name.toLowerCase().indexOf(lowerCaseSearchText) > -1 || item.description.toLowerCase().indexOf(lowerCaseSearchText) > -1) {
+                for (i = 0; i < sourceItems.length; i++) {
+                    item = sourceItems[i];
+                    if (item.name.toLowerCase().indexOf(lowerCaseSearchText) > -1 || item.description.toLowerCase().indexOf(lowerCaseSearchText) > -1 || (item.gearTags || []).join(' ').toLowerCase().indexOf(lowerCaseSearchText) > -1) {
                         filteredItems.push(Vue.util.extend({}, item));
                     }
                 }
@@ -165,6 +201,9 @@ export default {
             }
 
             return filteredItems;
+        },
+        availableTags() {
+            return this.library.getGearTags();
         },
         list() {
             return this.library.getListById(this.library.defaultListId);

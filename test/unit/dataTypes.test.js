@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { Library } = require('../../client/dataTypes.js');
+const { Library, normalizeGearTags } = require('../../client/dataTypes.js');
 const weight = require('../../client/utils/weight.js');
 
 test('default placeholder item does not affect totals', () => {
@@ -144,4 +144,50 @@ test('saved library data loads without stale first-run ids', () => {
     assert.equal(loaded.getCategoryById(saved.categories[0].id).name, 'Cooking');
     assert.equal(loaded.getItemById(saved.items[0].id).name, 'Pot');
     assert.equal(loaded.getItemById(loaded.sequence + 1), undefined);
+});
+
+test('gear tags are normalized and deduplicated', () => {
+    assert.deepEqual(normalizeGearTags([' sleep ', 'Sleep', '', 'cook']), ['sleep', 'cook']);
+    assert.deepEqual(normalizeGearTags('sleep'), []);
+});
+
+test('new items inherit the current category name as their default gear tag', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+
+    category.name = 'Kitchen';
+    const item = library.newItem({ category });
+
+    assert.deepEqual(item.gearTags, ['Kitchen']);
+});
+
+test('old saved items without gear tags load with an empty tag list', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const item = library.getItemById(category.categoryItems[0].itemId);
+
+    item.name = 'Bottle';
+    const saved = library.save();
+    delete saved.items[0].gearTags;
+
+    const loaded = new Library();
+    loaded.load(saved);
+
+    assert.deepEqual(loaded.items[0].gearTags, []);
+});
+
+test('gear tag list is derived from named items only', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const unnamed = library.getItemById(category.categoryItems[0].itemId);
+    const named = library.newItem({ category });
+
+    unnamed.gearTags = ['hidden'];
+    named.name = 'Tarp';
+    named.gearTags = ['Shelter', 'sleep'];
+
+    assert.deepEqual(library.getGearTags(), ['Shelter', 'sleep']);
 });

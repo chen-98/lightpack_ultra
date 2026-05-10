@@ -61,6 +61,9 @@
         </span>
         <input v-model="item.name" v-focus-on-create="categoryItem._isNew" type="text" class="lpName lpSilent" placeholder="Name" @input="saveItem">
         <input v-model="item.description" type="text" class="lpDescription lpSilent" placeholder="Description" @input="saveItem">
+        <span class="lpTagsCell">
+            <input v-model="displayTags" type="text" class="lpTags lpSilent" placeholder="Tags" @input="saveTags">
+        </span>
         <span class="lpActionsCell">
             <i class="lpSprite lpCamera" title="Upload a photo or use a photo from the web" @click="updateItemImage" />
             <i class="lpSprite lpLink" :class="{lpActive: item.url}" title="Add a link for this item" @click="updateItemLink" />
@@ -109,6 +112,7 @@ export default {
             weightError: false,
             priceError: false,
             qtyError: false,
+            displayTags: '',
             numStars: 4,
         };
     },
@@ -117,7 +121,9 @@ export default {
             return this.$store.state.library;
         },
         item() {
-            return Vue.util.extend({}, this.itemContainer.item);
+            const item = Vue.util.extend({}, this.itemContainer.item);
+            item.gearTags = (item.gearTags || []).slice();
+            return item;
         },
         categoryItem() {
             return Vue.util.extend({}, this.itemContainer.categoryItem);
@@ -142,6 +148,7 @@ export default {
     watch: {
         item() {
             this.setDisplayWeight();
+            this.setDisplayTags();
         },
         categoryItem() {
             this.setDisplayQty();
@@ -151,10 +158,15 @@ export default {
         this.setDisplayWeight();
         this.setDisplayPrice();
         this.setDisplayQty();
+        this.setDisplayTags();
     },
     methods: {
         saveItem() {
             this.$store.commit('updateItem', this.item);
+        },
+        saveTags() {
+            this.item.gearTags = this.displayTags.split(',');
+            this.saveItem();
         },
         saveCategoryItem() {
             this.$store.commit('updateCategoryItem', { category: this.category, categoryItem: this.categoryItem });
@@ -209,6 +221,9 @@ export default {
         },
         setDisplayWeight() {
             this.displayWeight = weightUtils.MgToWeight(this.item.weight, this.item.authorUnit);
+        },
+        setDisplayTags() {
+            this.displayTags = (this.item.gearTags || []).join(', ');
         },
         updateItemLink() {
             bus.$emit('updateItemLink', this.item);

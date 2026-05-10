@@ -127,6 +127,15 @@ input.lpCategoryName { /* specificity */
         min-width: 100px;
     }
 
+    .lpTagsCell {
+        flex: 0 0 110px;
+        margin-right: 4px;
+
+        .lpTags {
+            width: 100%;
+        }
+    }
+
     .lpActionsCell {
         align-self: center;
         flex: 0 0 130px;

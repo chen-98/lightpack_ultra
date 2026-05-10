@@ -11,6 +11,23 @@ const defaultOptionalFields = {
     listDescription: false,
 };
 
+function normalizeGearTags(gearTags) {
+    if (!Array.isArray(gearTags)) {
+        return [];
+    }
+    const seen = {};
+    return gearTags
+        .map(tag => String(tag || '').trim())
+        .filter((tag) => {
+            const key = tag.toLowerCase();
+            if (!tag || seen[key]) {
+                return false;
+            }
+            seen[key] = true;
+            return true;
+        });
+}
+
 const Item = function ({ id, unit }) {
     this.id = id;
     this.name = '';
@@ -24,11 +41,13 @@ const Item = function ({ id, unit }) {
     this.image = '';
     this.imageUrl = '';
     this.url = '';
+    this.gearTags = [];
 
     return this;
 };
 
 Item.prototype.save = function () {
+    this.gearTags = normalizeGearTags(this.gearTags);
     return this;
 };
 
@@ -43,6 +62,7 @@ Item.prototype.load = function (input) {
     if (typeof this.price === 'string') {
         this.price = parseFloat(this.price, 10);
     }
+    this.gearTags = normalizeGearTags(this.gearTags);
 };
 
 const Category = function ({ library, id, _isNew }) {
@@ -364,6 +384,9 @@ Library.prototype.firstRun = function () {
 
 Library.prototype.newItem = function ({ category, _isNew }) {
     const temp = new Item({ id: this.nextSequence(), unit: this.itemUnit });
+    if (category && category.name) {
+        temp.gearTags = normalizeGearTags([category.name]);
+    }
     this.items.push(temp);
     this.idMap[temp.id] = temp;
     if (category) {
@@ -374,6 +397,7 @@ Library.prototype.newItem = function ({ category, _isNew }) {
 
 Library.prototype.updateItem = function (item) {
     const oldItem = this.getItemById(item.id);
+    item.gearTags = normalizeGearTags(item.gearTags);
     assignIn(oldItem, item);
     return oldItem;
 };
@@ -507,6 +531,16 @@ Library.prototype.getItemsInCurrentList = function () {
 
 Library.prototype.getNamedItems = function () {
     return this.items.filter(item => String(item.name || '').trim().length > 0);
+};
+
+Library.prototype.getGearTags = function () {
+    const tags = {};
+    this.getNamedItems().forEach((item) => {
+        normalizeGearTags(item.gearTags).forEach((tag) => {
+            tags[tag.toLowerCase()] = tag;
+        });
+    });
+    return Object.keys(tags).sort().map(key => tags[key]);
 };
 
 Library.prototype.findCategoryWithItemById = function (itemId, listId) {
@@ -786,4 +820,5 @@ module.exports = {
     List,
     Category,
     Item,
+    normalizeGearTags,
 };
