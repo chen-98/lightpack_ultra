@@ -86,6 +86,19 @@ const store = new Vuex.Store({
             state.library.newItem({ category, _isNew });
             state.library.getListById(state.library.defaultListId).calculateTotals();
         },
+        addQuickEntryItems(state, { category, rows }) {
+            rows.forEach((row) => {
+                const item = state.library.newItem({ category });
+                const categoryItem = category.getCategoryItemById(item.id);
+                item.name = row.name;
+                item.authorUnit = row.unit;
+                item.weight = weightUtils.WeightToMg(row.weight, row.unit);
+                if (categoryItem) {
+                    categoryItem.qty = 1;
+                }
+            });
+            state.library.getListById(state.library.defaultListId).calculateTotals();
+        },
         newCategory(state, list) {
             const category = state.library.newCategory({ list, _isNew: true });
             const item = state.library.newItem({ category });

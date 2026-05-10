@@ -27,3 +27,4 @@
 | 2026-05-10 | Task 3.1: 装备标签和分类筛选体系；产品哲学 | 新增产品哲学和需求评审清单；将 `gearTags`、默认分类标签和装备库标签筛选需求整合进装备分类体系；在 README 中加入文档入口 | 人工检查文档 | `docs: add product philosophy and feature requirements` |
 | 2026-05-10 | Task 1.2: 核心业务测试 | 补充 `dataTypes` 单元测试，覆盖 worn/consumable 统计、删除引用、复制清单、保存加载等核心行为 | `npm run test:unit`; `npm run check` | `test: cover core library data behavior` |
 | 2026-05-10 | Task 3.1: 装备标签和分类筛选体系 | 为装备增加 `gearTags`；支持默认分类 tag、行内 tag 编辑、Gear 侧栏 tag 筛选和旧数据兼容 | `npm run test:unit`; `npm run check` | `feat: add gear tags and sidebar filtering` |
+| 2026-05-10 | Task 4.1: 快速录入模式 | 支持 Enter 连续新增装备；支持粘贴多行 `名称 + 重量 + 单位` 批量录入；新增 quick-entry 解析测试 | `npm run test:unit`; `npm run check` | `feat: add quick entry shortcuts` |

@@ -59,7 +59,7 @@
         <span v-if="library.optionalFields['images']" class="lpImageCell">
             <img v-if="thumbnailImage" class="lpItemImage" :src="thumbnailImage" @click="viewItemImage()">
         </span>
-        <input v-model="item.name" v-focus-on-create="categoryItem._isNew" type="text" class="lpName lpSilent" placeholder="Name" @input="saveItem">
+        <input v-model="item.name" v-focus-on-create="categoryItem._isNew" type="text" class="lpName lpSilent" placeholder="Name" @input="saveItem" @paste="pasteItems">
         <input v-model="item.description" type="text" class="lpDescription lpSilent" placeholder="Description" @input="saveItem">
         <span class="lpTagsCell">
             <input v-model="displayTags" type="text" class="lpTags lpSilent" placeholder="Tags" @input="saveTags">
@@ -75,11 +75,11 @@
             <input v-model="displayPrice" v-empty-if-zero type="text" :class="{lpPrice: true, lpNumber: true, lpSilent: true, lpSilentError: priceError}" @input="savePrice" @keydown.up="incrementPrice($event)" @keydown.down="decrementPrice($event)" @blur="setDisplayPrice">
         </span>
         <span class="lpWeightCell lpNumber">
-            <input v-model="displayWeight" v-empty-if-zero type="text" :class="{lpWeight: true, lpNumber: true, lpSilent: true, lpSilentError: weightError}" @input="saveWeight" @keydown.up="incrementWeight($event)" @keydown.down="decrementWeight($event)">
+            <input v-model="displayWeight" v-empty-if-zero type="text" :class="{lpWeight: true, lpNumber: true, lpSilent: true, lpSilentError: weightError}" @input="saveWeight" @keydown.up="incrementWeight($event)" @keydown.down="decrementWeight($event)" @keydown.enter.prevent="newItemAfter">
             <unitSelect :unit="item.authorUnit" :on-change="setUnit" />
         </span>
         <span class="lpQtyCell">
-            <input v-model="displayQty" type="text" :class="{lpQty: true, lpNumber: true, lpSilent: true, lpSilentError: qtyError}" @input="saveQty" @keydown.up="incrementQty($event)" @keydown.down="decrementQty($event)">
+            <input v-model="displayQty" type="text" :class="{lpQty: true, lpNumber: true, lpSilent: true, lpSilentError: qtyError}" @input="saveQty" @keydown.up="incrementQty($event)" @keydown.down="decrementQty($event)" @keydown.enter.prevent="newItemAfter">
             <span class="lpArrows">
                 <span class="lpSprite lpUp" @click="incrementQty($event)" />
                 <span class="lpSprite lpDown" @click="decrementQty($event)" />
@@ -96,6 +96,7 @@ import unitSelect from './unit-select.vue';
 
 const utilsMixin = require('../mixins/utils-mixin.js');
 const weightUtils = require('../utils/weight.js');
+const { parseQuickEntryRows } = require('../utils/quick-entry.js');
 
 export default {
     name: 'Item',
@@ -168,8 +169,30 @@ export default {
             this.item.gearTags = this.displayTags.split(',');
             this.saveItem();
         },
+        pasteItems(evt) {
+            const text = evt.clipboardData && evt.clipboardData.getData('text');
+            const rows = parseQuickEntryRows(text, this.item.authorUnit);
+            if (rows.length < 2) {
+                return;
+            }
+
+            evt.preventDefault();
+            const firstRow = rows[0];
+            this.item.name = firstRow.name;
+            this.item.authorUnit = firstRow.unit;
+            this.item.weight = weightUtils.WeightToMg(firstRow.weight, firstRow.unit);
+            this.displayWeight = firstRow.weight;
+            this.saveItem();
+            this.$store.commit('addQuickEntryItems', { category: this.category, rows: rows.slice(1) });
+        },
         saveCategoryItem() {
             this.$store.commit('updateCategoryItem', { category: this.category, categoryItem: this.categoryItem });
+        },
+        newItemAfter() {
+            if (!this.item.name && !this.item.weight) {
+                return;
+            }
+            this.$store.commit('newItem', { category: this.category, _isNew: true });
         },
         setUnit(unit) {
             this.item.authorUnit = unit;
