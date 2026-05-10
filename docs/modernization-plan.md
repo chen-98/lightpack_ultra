@@ -140,7 +140,7 @@
 
 ### Task 2.1: 空输入和自动创建行为调查
 
-状态：待开始
+状态：完成
 
 需要确认的路径：
 
@@ -153,6 +153,29 @@
 
 - 明确哪些自动创建行为应该保留，哪些应该删除。
 - 写出行为表，并用测试固定下来。
+
+当前行为：
+
+| 路径 | 当前行为 | 问题 | 决策 |
+| --- | --- | --- | --- |
+| `Library.firstRun()` | 新用户默认创建 1 个 list、1 个 category、1 个空 item | 空 item 会进入保存数据和数量统计 | 保留 UI 起步体验，但空 item 不应算作有效装备 |
+| Vuex `newList` | 新建 list 后自动创建 1 个 category、1 个空 item | 空 list 也会携带无效 item | 保留起步占位结构，但保存和统计应忽略空 item |
+| Vuex `newCategory` | 新建 category 后自动创建 1 个空 item | 空 category 会携带无效 item | 保留快速录入体验，但保存和输出应过滤空 item |
+| Vuex `newItem` | 只在当前 category 中创建空 item | 不会额外创建 category | 保留 |
+| `Category.calculateSubtotal()` | 所有 category item 都计入 `subtotalQty` | 空 item 默认 `qty: 1`，污染数量统计 | 空 item 不参与数量、重量、价格统计 |
+| `Library.save()` | 保存所有 items/categories/lists | 空 item 会进入 localStorage/MongoDB | 保存时过滤无意义空 item，并清理 category 引用 |
+| 分享页/嵌入页 | 渲染所有 category item | 可能输出空装备行 | 依赖保存过滤和渲染侧保护 |
+| CSV 导出 | 输出所有 category item | 可能输出空 CSV 行 | 跳过空 item |
+
+空 item 定义：
+
+一个 item 同时满足以下条件时视为无意义空 item：
+
+- `name`、`description`、`url`、`image`、`imageUrl` 均为空白。
+- `weight` 为 0。
+- `price` 为 0 或未设置。
+
+这种 item 可以临时存在于编辑 UI 中作为占位输入，但不应污染统计、保存数据、分享页或 CSV。
 
 ### Task 2.2: 空输入修复
 
