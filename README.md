@@ -6,6 +6,7 @@ Project planning
 ----------------
 
 Modernization and feature planning lives in [docs/modernization-plan.md](docs/modernization-plan.md).
+Product philosophy and feature review guidance lives in [docs/product-philosophy.md](docs/product-philosophy.md).
 Traceable change records live in [docs/change-log.md](docs/change-log.md).
 
 Development setup

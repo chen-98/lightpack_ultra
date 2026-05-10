@@ -23,3 +23,5 @@
 | 2026-05-10 | Task 2.1: 空输入和自动创建行为调查 | 记录 list/category/item 自动创建路径；定义无意义空 item；明确统计、保存、分享页和 CSV 的处理决策 | 人工检查文档 | `docs: document empty input behavior` |
 | 2026-05-10 | Task 2.2: 空输入修复 | 增加空 item 判定；统计和保存时忽略空 item；分享页/嵌入页/CSV 跳过旧数据中的空 item；增加单元测试覆盖 | `npm run test:unit`; `npm run check` | `fix: ignore empty gear items` |
 | 2026-05-10 | Task 2.2: 空输入修复 | Gear 侧栏只展示已填写名称的装备；新增 `Library.getNamedItems()` 作为可测试的数据边界 | `npm run test:unit`; `npm run check`; in-app browser manual check | `fix: hide unnamed gear from sidebar` |
+| 2026-05-10 | 阶段 4: 清单体验优化 | 将快速录入模式、重量洞察面板、分享页增强纳入现代化计划，并补充目标、核心能力和验收标准 | 人工检查文档 | `docs: add product philosophy and feature requirements` |
+| 2026-05-10 | Task 3.1: 装备标签和分类筛选体系；产品哲学 | 新增产品哲学和需求评审清单；将 `gearTags`、默认分类标签和装备库标签筛选需求整合进装备分类体系；在 README 中加入文档入口 | 人工检查文档 | `docs: add product philosophy and feature requirements` |
