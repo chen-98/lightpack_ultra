@@ -4,9 +4,11 @@
   "description": "LighterPack =========== LighterPack is a website to track the gear you take on adventures. It is still in Beta.",
   "main": "app.js",
   "scripts": {
-    "dev": "node --max-old-space-size=8192 app.js",
-    "start": "webpack-cli --config ./webpack.config.js && node app.js",
-    "build": "webpack-cli --config ./webpack.config.js",
+    "dev": "node --openssl-legacy-provider --max-old-space-size=8192 app.js",
+    "start": "node --openssl-legacy-provider ./node_modules/webpack-cli/bin/cli.js --config ./webpack.config.js && node --openssl-legacy-provider app.js",
+    "build": "node --openssl-legacy-provider ./node_modules/webpack-cli/bin/cli.js --config ./webpack.config.js",
+    "test:e2e": "playwright test",
+    "check": "npm run build",
     "lint:css": "./node_modules/.bin/stylelint \"client/**/*.{scss,vue}\" --fix",
     "lint:js": "./node_modules/.bin/eslint --ext .vue --ext .js ./ --fix"
   },
