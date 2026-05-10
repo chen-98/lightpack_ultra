@@ -32,6 +32,12 @@ Item.prototype.save = function () {
     return this;
 };
 
+Item.prototype.isEmpty = function () {
+    const textFields = ['name', 'description', 'url', 'image', 'imageUrl'];
+    const hasText = textFields.some(field => String(this[field] || '').trim().length > 0);
+    return !hasText && !this.weight && !this.price;
+};
+
 Item.prototype.load = function (input) {
     assignIn(this, input);
     if (typeof this.price === 'string') {
@@ -92,6 +98,9 @@ Category.prototype.calculateSubtotal = function () {
         const categoryItem = this.categoryItems[i];
         const item = this.library.getItemById(categoryItem.itemId);
         if (!item) {
+            continue;
+        }
+        if (item.isEmpty()) {
             continue;
         }
         this.subtotalWeight += item.weight * categoryItem.qty;
@@ -548,12 +557,19 @@ Library.prototype.save = function () {
 
     out.items = [];
     for (var i in this.items) {
-        out.items.push(this.items[i].save());
+        if (!this.items[i].isEmpty()) {
+            out.items.push(this.items[i].save());
+        }
     }
 
     out.categories = [];
     for (var i in this.categories) {
-        out.categories.push(this.categories[i].save());
+        const savedCategory = this.categories[i].save();
+        savedCategory.categoryItems = savedCategory.categoryItems.filter((categoryItem) => {
+            const item = this.getItemById(categoryItem.itemId);
+            return item && !item.isEmpty();
+        });
+        out.categories.push(savedCategory);
     }
 
     out.lists = [];

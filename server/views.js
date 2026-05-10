@@ -258,6 +258,9 @@ router.get('/csv/:id', (req, res) => {
 
                     if (categoryItem) {
                         const item = library.getItemById(categoryItem.itemId);
+                        if (!item || item.isEmpty()) {
+                            continue;
+                        }
 
                         const itemRow = [item.name];
                         itemRow.push(category.name);
@@ -365,6 +368,9 @@ const renderCategory = function (category, args) {
     for (const i in category.categoryItems) {
         const categoryItem = category.categoryItems[i];
         const item = category.library.getItemById(categoryItem.itemId);
+        if (!item || item.isEmpty()) {
+            continue;
+        }
         extend(item, categoryItem);
         items += renderItem(item, args);
     }
