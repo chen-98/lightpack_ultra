@@ -22,3 +22,4 @@
 | 2026-05-10 | Task 1.1: 测试工具选择 | 新增 `npm run test:unit`；使用 Node 内置 `node:test` 建立单元测试基线；将 `npm run check` 扩展为先跑单元测试再构建 | `npm run test:unit`; `npm run check` | `test: add unit test baseline` |
 | 2026-05-10 | Task 2.1: 空输入和自动创建行为调查 | 记录 list/category/item 自动创建路径；定义无意义空 item；明确统计、保存、分享页和 CSV 的处理决策 | 人工检查文档 | `docs: document empty input behavior` |
 | 2026-05-10 | Task 2.2: 空输入修复 | 增加空 item 判定；统计和保存时忽略空 item；分享页/嵌入页/CSV 跳过旧数据中的空 item；增加单元测试覆盖 | `npm run test:unit`; `npm run check` | `fix: ignore empty gear items` |
+| 2026-05-10 | Task 2.2: 空输入修复 | Gear 侧栏只展示已填写名称的装备；新增 `Library.getNamedItems()` 作为可测试的数据边界 | `npm run test:unit`; `npm run check`; in-app browser manual check | `fix: hide unnamed gear from sidebar` |

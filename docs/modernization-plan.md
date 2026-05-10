@@ -198,8 +198,9 @@
 - `Item.isEmpty()` 定义无意义空 item。
 - `Category.calculateSubtotal()` 跳过空 item，避免污染数量、重量、价格统计。
 - `Library.save()` 过滤空 item，并清理 category 中指向空 item 的引用。
+- `Library.getNamedItems()` 为装备库侧栏提供只包含非空名称装备的数据源。
 - 分享页、嵌入页和 CSV 渲染时跳过空 item，兼容旧数据中已经存在的空 item。
-- 增加单元测试覆盖默认占位 item、保存过滤和有效 item 保留。
+- 增加单元测试覆盖默认占位 item、保存过滤、有效 item 保留和装备库名称过滤。
 
 ### Task 3.1: 装备分类设计
 

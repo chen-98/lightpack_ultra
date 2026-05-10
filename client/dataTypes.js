@@ -505,6 +505,10 @@ Library.prototype.getItemsInCurrentList = function () {
     return out;
 };
 
+Library.prototype.getNamedItems = function () {
+    return this.items.filter(item => String(item.name || '').trim().length > 0);
+};
+
 Library.prototype.findCategoryWithItemById = function (itemId, listId) {
     if (listId) {
         const list = this.getListById(listId);

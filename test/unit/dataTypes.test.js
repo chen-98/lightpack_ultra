@@ -45,3 +45,18 @@ test('meaningful item remains in totals and saved library data', () => {
     assert.equal(saved.items.length, 1);
     assert.equal(saved.categories[0].categoryItems.length, 1);
 });
+
+test('gear library only exposes items with names', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const placeholder = library.getItemById(category.categoryItems[0].itemId);
+
+    placeholder.description = 'Has details but no name';
+    placeholder.weight = weight.WeightToMg(1, 'oz');
+
+    const namedItem = library.newItem({ category });
+    namedItem.name = 'Stove';
+
+    assert.deepEqual(library.getNamedItems().map(item => item.name), ['Stove']);
+});
