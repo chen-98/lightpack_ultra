@@ -60,3 +60,88 @@ test('gear library only exposes items with names', () => {
 
     assert.deepEqual(library.getNamedItems().map(item => item.name), ['Stove']);
 });
+
+test('worn and consumable totals keep pack weight semantics stable', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const wornItem = library.getItemById(category.categoryItems[0].itemId);
+    const consumableItem = library.newItem({ category });
+
+    wornItem.name = 'Jacket';
+    wornItem.weight = weight.WeightToMg(1, 'lb');
+    category.categoryItems[0].qty = 2;
+    category.categoryItems[0].worn = true;
+
+    consumableItem.name = 'Food';
+    consumableItem.weight = weight.WeightToMg(8, 'oz');
+    category.categoryItems[1].qty = 3;
+    category.categoryItems[1].consumable = true;
+
+    list.calculateTotals();
+
+    assert.equal(list.totalQty, 5);
+    assert.equal(list.totalWeight, weight.WeightToMg(3.5, 'lb'));
+    assert.equal(list.totalWornWeight, weight.WeightToMg(1, 'lb'));
+    assert.equal(list.totalConsumableWeight, weight.WeightToMg(24, 'oz'));
+    assert.equal(list.totalPackWeight, weight.WeightToMg(2.5, 'lb'));
+    assert.equal(list.totalBaseWeight, weight.WeightToMg(1, 'lb'));
+});
+
+test('removing an item clears category references and id lookup', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const item = library.getItemById(category.categoryItems[0].itemId);
+
+    item.name = 'Headlamp';
+    library.removeItem(item.id);
+
+    assert.equal(library.getItemById(item.id), undefined);
+    assert.equal(category.getCategoryItemById(item.id), null);
+    assert.equal(library.items.includes(item), false);
+});
+
+test('copying a list preserves category item references without duplicating gear items', () => {
+    const library = new Library();
+    const originalList = library.getListById(library.defaultListId);
+    const originalCategory = library.getCategoryById(originalList.categoryIds[0]);
+    const item = library.getItemById(originalCategory.categoryItems[0].itemId);
+
+    originalList.name = 'Weekend';
+    originalCategory.name = 'Sleep';
+    item.name = 'Quilt';
+    item.weight = weight.WeightToMg(20, 'oz');
+
+    const copiedList = library.copyList(originalList.id);
+    const copiedCategory = library.getCategoryById(copiedList.categoryIds[0]);
+
+    assert.equal(copiedList.name, 'Copy of Weekend');
+    assert.equal(copiedCategory.name, 'Sleep');
+    assert.equal(copiedCategory.categoryItems[0].itemId, item.id);
+    assert.equal(library.items.length, 1);
+});
+
+test('saved library data loads without stale first-run ids', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const item = library.getItemById(category.categoryItems[0].itemId);
+
+    list.name = 'Loaded list';
+    category.name = 'Cooking';
+    item.name = 'Pot';
+    item.weight = weight.WeightToMg(100, 'g');
+
+    const saved = library.save();
+    const loaded = new Library();
+    loaded.load(saved);
+
+    assert.equal(loaded.lists.length, 1);
+    assert.equal(loaded.categories.length, 1);
+    assert.equal(loaded.items.length, 1);
+    assert.equal(loaded.getListById(saved.lists[0].id).name, 'Loaded list');
+    assert.equal(loaded.getCategoryById(saved.categories[0].id).name, 'Cooking');
+    assert.equal(loaded.getItemById(saved.items[0].id).name, 'Pot');
+    assert.equal(loaded.getItemById(loaded.sequence + 1), undefined);
+});
