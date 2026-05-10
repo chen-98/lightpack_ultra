@@ -5,6 +5,15 @@
     <style>.lpModalOverlay, #lpImageDialog { display: none; }
     .lpList { padding: 0; } </style>
     <h2 class="lpListName" >{{listName}}</h2>
+    <div class="lpShareSummary">
+        <div class="lpShareSummaryGrid">
+            <div><strong>Total</strong><span>{{shareSummary.totalWeightDisplay}} {{shareSummary.unit}}</span></div>
+            <div><strong>Pack</strong><span>{{shareSummary.totalPackWeightDisplay}} {{shareSummary.unit}}</span></div>
+            <div><strong>Base</strong><span>{{shareSummary.totalBaseWeightDisplay}} {{shareSummary.unit}}</span></div>
+            {{#shareSummary.hasWornWeight}}<div><strong>Worn</strong><span>{{shareSummary.totalWornWeightDisplay}} {{shareSummary.unit}}</span></div>{{/shareSummary.hasWornWeight}}
+            {{#shareSummary.hasConsumableWeight}}<div><strong>Consumable</strong><span>{{shareSummary.totalConsumableWeightDisplay}} {{shareSummary.unit}}</span></div>{{/shareSummary.hasConsumableWeight}}
+        </div>
+    </div>
     <div class="lpListSummary">
         <div class="lpChartContainer">
             <canvas class="lpChart" height="260" width="260"></canvas>

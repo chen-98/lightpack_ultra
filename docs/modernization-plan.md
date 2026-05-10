@@ -378,7 +378,7 @@ Item.gearTags = []
 
 ### Task 4.3: 分享页增强
 
-状态：待开始
+状态：完成
 
 目标：
 
@@ -401,6 +401,12 @@ Item.gearTags = []
 - CSV 导出仍跳过空装备，并与分享页使用一致的数据口径。
 - 未登录本地清单仍提示注册后才能生成分享链接。
 - `npm run check` 通过，并完成一次分享页手动检查。
+
+实现：
+
+- 分享页和嵌入页顶部显示 Total、Pack、Base、Worn、Consumable 摘要。
+- 分享页显示最重分类及占比。
+- 服务端分享渲染复用 `List.getWeightInsights()` 和现有 totals 口径。
 
 ## 决策记录
 

@@ -11,6 +11,22 @@
         <div id="main" class="lpShare">
             <div class="lpList {{#optionalFields.images}}lpShowImages{{/optionalFields.images}} {{#optionalFields.worn}}lpShowWorn{{/optionalFields.worn}} {{#optionalFields.consumable}}lpShowConsumable{{/optionalFields.consumable}} {{#optionalFields.price}}lpShowPrices{{/optionalFields.price}}">
                 <h1 class="lpListName">{{listName}}</h1>
+                <div class="lpShareSummary">
+                    <div class="lpShareSummaryGrid">
+                        <div><strong>Total</strong><span>{{shareSummary.totalWeightDisplay}} {{shareSummary.unit}}</span></div>
+                        <div><strong>Pack</strong><span>{{shareSummary.totalPackWeightDisplay}} {{shareSummary.unit}}</span></div>
+                        <div><strong>Base</strong><span>{{shareSummary.totalBaseWeightDisplay}} {{shareSummary.unit}}</span></div>
+                        {{#shareSummary.hasWornWeight}}<div><strong>Worn</strong><span>{{shareSummary.totalWornWeightDisplay}} {{shareSummary.unit}}</span></div>{{/shareSummary.hasWornWeight}}
+                        {{#shareSummary.hasConsumableWeight}}<div><strong>Consumable</strong><span>{{shareSummary.totalConsumableWeightDisplay}} {{shareSummary.unit}}</span></div>{{/shareSummary.hasConsumableWeight}}
+                    </div>
+                    {{#shareSummary.topCategories.length}}
+                        <ol class="lpShareCategoryBreakdown">
+                            {{#shareSummary.topCategories}}
+                                <li>{{name}} <span>{{weightDisplay}} {{shareSummary.unit}} / {{percentDisplay}}%</span></li>
+                            {{/shareSummary.topCategories}}
+                        </ol>
+                    {{/shareSummary.topCategories.length}}
+                </div>
                 <div class="lpListSummary">
                     <div class="lpChartContainer">
                         <canvas class="lpChart" height="260" width="260"></canvas>

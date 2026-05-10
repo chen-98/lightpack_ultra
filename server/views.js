@@ -125,12 +125,14 @@ router.get('/r/:id', (req, res) => {
         });
 
         const renderedTotals = renderLibraryTotals(library, templates.t_totals, templates.t_unitSelect);
+        const shareSummary = getShareSummary(list, library);
 
         let model = {
             listName: list.name,
             chartData,
             renderedCategories,
             renderedTotals,
+            shareSummary,
             optionalFields: library.optionalFields,
             renderedDescription: markdown.toHTML(list.description),
             scripts: shareScriptsHtml,
@@ -190,6 +192,7 @@ router.get('/e/:id', (req, res) => {
         });
 
         const renderedTotals = renderLibraryTotals(library, templates.t_totals, templates.t_unitSelect);
+        const shareSummary = getShareSummary(list, library);
 
         let model = {
             externalId: id,
@@ -197,6 +200,7 @@ router.get('/e/:id', (req, res) => {
             chartData,
             renderedCategories,
             renderedTotals,
+            shareSummary,
             optionalFields: library.optionalFields,
             renderedDescription: markdown.toHTML(list.description),
             baseUrl: config.get('deployUrl'),
@@ -457,6 +461,26 @@ const renderListTotals = function (list, totalsTemplate, unitSelectTemplate, uni
 var renderLibraryTotals = function (library, totalsTemplate, unitSelectTemplate) {
     return renderListTotals(library.getListById(library.defaultListId), totalsTemplate, unitSelectTemplate, library.totalUnit);
 };
+
+function getShareSummary(list, library) {
+    list.calculateTotals();
+    const insights = list.getWeightInsights();
+    return {
+        totalWeightDisplay: weightUtils.MgToWeight(list.totalWeight, library.totalUnit),
+        totalPackWeightDisplay: weightUtils.MgToWeight(list.totalPackWeight, library.totalUnit),
+        totalBaseWeightDisplay: weightUtils.MgToWeight(list.totalBaseWeight, library.totalUnit),
+        totalWornWeightDisplay: weightUtils.MgToWeight(list.totalWornWeight, library.totalUnit),
+        totalConsumableWeightDisplay: weightUtils.MgToWeight(list.totalConsumableWeight, library.totalUnit),
+        unit: library.totalUnit,
+        hasWornWeight: list.totalWornWeight > 0,
+        hasConsumableWeight: list.totalConsumableWeight > 0,
+        topCategories: insights.topCategories.map(category => ({
+            name: category.name || 'Unnamed category',
+            weightDisplay: weightUtils.MgToWeight(category.weight, library.totalUnit),
+            percentDisplay: Math.round(category.percent * 100),
+        })),
+    };
+}
 
 function renderUnitSelect(unit, unitSelectTemplate, weight) {
     const temp = { unit, units: [{ unit: 'oz', selected: (unit == 'oz') }, { unit: 'lb', selected: (unit == 'lb') }, { unit: 'g', selected: (unit == 'g') }, { unit: 'kg', selected: (unit == 'kg') }], weight };

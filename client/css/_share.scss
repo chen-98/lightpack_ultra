@@ -25,6 +25,41 @@
     #lpListDescription {
         margin: 30px 0;
     }
+
+    .lpShareSummary {
+        border-bottom: 1px solid #ddd;
+        border-top: 1px solid #ddd;
+        margin: 0 0 25px;
+        padding: 15px 0;
+    }
+
+    .lpShareSummaryGrid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+
+        div {
+            min-width: 110px;
+        }
+
+        strong,
+        span {
+            display: block;
+        }
+
+        span {
+            color: #555;
+        }
+    }
+
+    .lpShareCategoryBreakdown {
+        margin: 15px 0 0;
+        padding-left: 20px;
+
+        span {
+            color: #777;
+        }
+    }
 }
 
 .lpUnitSelect {
