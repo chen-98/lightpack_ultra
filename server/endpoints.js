@@ -21,7 +21,7 @@ if (config.get('mailgunAPIKey')) {
 }
 
 const collections = ['users', 'libraries'];
-const db = mongojs(config.get('databaseUrl'), collections);
+let db = mongojs(config.get('databaseUrl'), collections);
 
 const dataTypes = require('../client/dataTypes.js');
 
@@ -163,7 +163,11 @@ function saveLibrary(req, res, user) {
 
     user.library = library;
     user.syncToken++;
-    db.users.save(user, () => {
+    db.users.save(user, (err) => {
+        if (err) {
+            logWithRequest(req, { message: 'Library save failed', username: user.username, error: err });
+            return res.status(500).json({ message: 'An error occurred while saving your data. Please try again.' });
+        }
         logWithRequest(req, { message: 'saved library', username: user.username });
 
         return res.status(200).json({ message: 'success', syncToken: user.syncToken });
@@ -417,5 +421,12 @@ function imageUpload(req, res, user) {
         });
     });
 }
+
+router._test = {
+    saveLibrary,
+    setDb(testDb) {
+        db = testDb;
+    },
+};
 
 module.exports = router;

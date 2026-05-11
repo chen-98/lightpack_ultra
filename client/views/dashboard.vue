@@ -64,6 +64,18 @@
         padding: 0 16px;
     }
 }
+
+.lpSaveStatus {
+    color: $content2;
+    flex: 0 0 auto;
+    font-size: 12px;
+    height: 100%;
+    padding: 20px 12px 0;
+}
+
+.lpSaveStatusFailed {
+    color: $red1;
+}
 </style>
 
 <template>
@@ -75,6 +87,16 @@
                     <a id="hamburger" class="lpTransition" @click="toggleSidebar"><i class="lpSprite lpHamburger" /></a>
                 </span>
                 <input id="lpListName" :value="list.name" type="text" class="lpListName lpSilent headerItem" value="New List" placeholder="List Name" autocomplete="off" name="lastpass-disable-search" @input="updateListName">
+                <span
+                    v-if="isSignedIn"
+                    class="lpSaveStatus"
+                    :class="{lpSaveStatusFailed: saveStatus === 'failed'}"
+                    role="status"
+                    aria-live="polite"
+                    :title="saveStatusTitle"
+                >
+                    {{ saveStatusText }}
+                </span>
                 <share />
                 <listSettings />
                 <accountDropdown v-if="isSignedIn" />
@@ -168,6 +190,21 @@ export default {
         },
         isSignedIn() {
             return this.$store.state.loggedIn;
+        },
+        saveStatus() {
+            return this.$store.state.saveStatus;
+        },
+        saveStatusText() {
+            if (this.saveStatus === 'saving') {
+                return 'Saving...';
+            }
+            if (this.saveStatus === 'failed') {
+                return 'Save failed';
+            }
+            return 'Saved';
+        },
+        saveStatusTitle() {
+            return this.$store.state.saveError || this.saveStatusText;
         },
     },
     beforeMount() {

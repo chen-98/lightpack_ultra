@@ -21,6 +21,9 @@ const store = new Vuex.Store({
         syncToken: false,
         saveType: null,
         lastSaveData: null,
+        queuedSaveData: null,
+        saveStatus: 'idle',
+        saveError: null,
         loggedIn: false,
         directiveInstances: {},
         globalAlerts: [],
@@ -40,8 +43,17 @@ const store = new Vuex.Store({
         setLastSaveData(state, lastSaveData) {
             state.lastSaveData = lastSaveData;
         },
+        setQueuedSaveData(state, queuedSaveData) {
+            state.queuedSaveData = queuedSaveData;
+        },
         setIsSaving(state, isSaving) {
             state.isSaving = isSaving;
+        },
+        setSaveStatus(state, saveStatus) {
+            state.saveStatus = saveStatus;
+        },
+        setSaveError(state, saveError) {
+            state.saveError = saveError;
         },
         signout(state) {
             createCookie('lp', '', -1);
@@ -322,10 +334,13 @@ const store = new Vuex.Store({
                     'setSaveType',
                     'setSyncToken',
                     'setLastSaveData',
+                    'setQueuedSaveData',
                     'signout',
                     'setLoggedIn',
                     'loadLibraryData',
                     'clearLibraryData',
+                    'setSaveStatus',
+                    'setSaveError',
                 ];
                 if (!state.library || ignore.indexOf(mutation.type) > -1) {
                     return;
@@ -336,22 +351,27 @@ const store = new Vuex.Store({
                     return;
                 }
 
-                const saveRemotely = function (saveData) {
+                const saveRemotely = function () {
                     if (state.isSaving) {
                         setTimeout(() => { store.commit('save', true); }, saveInterval + 1);
                         return;
                     }
 
-                    if (!saveData) {
-                        saveData = JSON.stringify(state.library.save());
+                    const queuedSaveData = state.queuedSaveData || JSON.stringify(state.library.save());
+                    if (!queuedSaveData || queuedSaveData == state.lastSaveData) {
+                        store.commit('setQueuedSaveData', null);
+                        store.commit('setSaveStatus', 'saved');
+                        store.commit('setSaveError', null);
+                        return;
                     }
 
                     store.commit('setIsSaving', true);
-                    store.commit('setLastSaveData', saveData);
+                    store.commit('setSaveStatus', 'saving');
+                    store.commit('setSaveError', null);
 
                     return fetchJson('/saveLibrary/', {
                         method: 'POST',
-                        body: JSON.stringify({ syncToken: state.syncToken, username: state.loggedIn, data: saveData }),
+                        body: JSON.stringify({ syncToken: state.syncToken, username: state.loggedIn, data: queuedSaveData }),
                         headers: {
                             'Content-Type': 'application/json',
                         },
@@ -359,26 +379,41 @@ const store = new Vuex.Store({
                     })
                         .then((response) => {
                             store.commit('setSyncToken', response.syncToken);
+                            store.commit('setLastSaveData', queuedSaveData);
+                            if (state.queuedSaveData == queuedSaveData) {
+                                store.commit('setQueuedSaveData', null);
+                            }
                             store.commit('setIsSaving', false);
+                            if (state.queuedSaveData && state.queuedSaveData != state.lastSaveData) {
+                                saveRemotely();
+                            } else {
+                                store.commit('setSaveStatus', 'saved');
+                            }
                         })
                         .catch((response) => {
                             store.commit('setIsSaving', false);
                             let error = 'An error occurred while attempting to save your data.';
-                            if (response.json && response.json.status) {
-                                error = response.json.status;
+                            if (response.message) {
+                                error = response.message;
                             }
-                            if (response.status == 401) {
+                            if (response.statusCode == 401) {
                                 bus.$emit('unauthorized', error);
                             } else {
-                                alert(error); // TODO
+                                store.commit('setSaveStatus', 'failed');
+                                store.commit('setSaveError', error);
+                                setTimeout(() => { store.commit('save', true); }, saveInterval);
                             }
                         });
                 };
 
                 if (state.saveType === 'remote') {
-                    saveRemotely(saveData);
+                    store.commit('setQueuedSaveData', saveData);
+                    saveRemotely();
                 } else if (state.saveType === 'local') {
                     localStorage.library = saveData;
+                    store.commit('setLastSaveData', saveData);
+                    store.commit('setSaveStatus', 'saved');
+                    store.commit('setSaveError', null);
                 }
             }, saveInterval, { maxWait: saveInterval * 3 }));
         },
