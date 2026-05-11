@@ -43,3 +43,23 @@ Reason: AI 推荐质量依赖清晰的装备数据、场景信息和用户反馈
 Decision: 新增 working agreement、architecture notes 和 decision records，作为后续 vibecoding 改动的最小维护骨架。
 
 Reason: 项目需要在快速迭代中保持方向、架构上下文和决策原因可见。最小文档骨架可以降低漂移风险，而不引入沉重流程。
+
+## 2026-05-11: Use Strangler Pattern for Future Migration
+
+Decision: 未来如果迁移前端框架、Python/FastAPI 后端或更彻底的新架构，应优先采用逐步替换，而不是一次性全量重建。
+
+Reason: 当前代码虽然存在老旧依赖、全局状态和大文件集中等维护压力，但核心业务模型已经可以被单元测试覆盖，主要产品路径也已经跑通。全量重写会把已知复杂度替换成业务语义重建、数据迁移和功能回归风险。
+
+重新评估重建或迁移前，必须满足：
+
+1. `GearItem`、`GearTag`、`GearType`、`TripPlan` 等核心实体语义稳定。
+2. saved library JSON 有明确迁移脚本、回滚方案和兼容测试。
+3. 核心业务行为已经由单元测试或端到端测试覆盖。
+4. 新架构可以通过接口兼容、页面级替换或并行运行逐步接入。
+5. 现有 Node/Vue 架构已经明确阻碍关键目标，例如安全、性能、开发效率或数据一致性。
+
+## 2026-05-11: Keep Modernization Plan as Roadmap Index
+
+Decision: `modernization-plan.md` 只维护目标、阶段、近期优先级、风险和完成定义；架构细节进入 `architecture-notes.md`，决策原因进入 `decision-records.md`，已完成改动进入 `change-log.md`。
+
+Reason: 计划文档已经同时承载路线图、任务详情、架构说明、决策记录和变更记录，导致后续 review 成本上升。拆分职责可以让计划文档保持可读，同时保留追溯能力。

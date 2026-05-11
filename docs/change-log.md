@@ -31,3 +31,4 @@
 | 2026-05-10 | Task 4.2: 重量洞察面板 | 新增 `List.getWeightInsights()`；在列表摘要中展示最重分类和最重装备；增加洞察排序单元测试 | `npm run test:unit`; `npm run check` | `feat: add weight insights panel` |
 | 2026-05-10 | Task 4.3: 分享页增强 | 分享页和嵌入页增加重量摘要；分享页展示最重分类占比；服务端复用重量洞察数据 | `npm run check` | `feat: enhance shared list summary` |
 | 2026-05-11 | 工程边界: 文档与追溯；产品哲学: 发布策略 | 新增协作规则、架构说明和决策记录文档；在 README 和现代化计划中加入文档维护入口 | 人工检查文档；`git diff --check` | `docs: add workflow guardrails` |
+| 2026-05-11 | 文档维护: 现代化计划瘦身 | 将 `modernization-plan.md` 精简为路线图首页；把架构边界和迁移路线移入 `architecture-notes.md`；把重建条件和文档职责决策移入 `decision-records.md` | 人工检查文档；`git diff --check` | `docs: streamline modernization plan` |
