@@ -27,6 +27,9 @@
                         <p v-if="uploading">
                             Uploading image...
                         </p>
+                        <p v-if="uploadError" class="lpError">
+                            {{ uploadError }}
+                        </p>
                     </template>
                     <template v-if="item.image">
                         <button id="itemImageUpload" class="lpButton" @click="removeItemImage">
@@ -55,6 +58,7 @@ export default {
             imageUrl: null,
             item: false,
             uploading: false,
+            uploadError: '',
             shown: false,
         };
     },
@@ -63,6 +67,7 @@ export default {
             this.shown = true;
             this.item = item;
             this.imageUrl = item.imageUrl;
+            this.uploadError = '';
         });
     },
     methods: {
@@ -74,11 +79,15 @@ export default {
             this.$refs.imageInput.click();
         },
         uploadImage(evt) {
+            this.uploadError = '';
             if (!FormData) {
-                alert('Your browser is not supported for file uploads. Please update to a more modern browser.');
+                this.uploadError = 'Your browser is not supported for file uploads. Please update to a more modern browser.';
                 return;
             }
             const file = evt.target.files[0];
+            if (!file) {
+                return;
+            }
             const name = file.name;
             const size = file.size;
             const type = file.type;
@@ -87,11 +96,11 @@ export default {
                 return;
             }
             if (size > 2500000) {
-                alert('Please upload a file less than 2.5mb');
+                this.uploadError = 'Please upload a file less than 2.5mb.';
                 return;
             }
-            if (type != 'image/png' && type != 'image/jpg' && !type != 'image/gif' && type != 'image/jpeg') {
-                alert('File doesnt match png, jpg or gif.');
+            if (['image/png', 'image/jpg', 'image/jpeg', 'image/gif'].indexOf(type) === -1) {
+                this.uploadError = 'Please upload a PNG, JPG, or GIF image.';
                 return;
             }
             const formData = new FormData(this.$refs.imageUploadForm);
@@ -109,7 +118,7 @@ export default {
                     this.shown = false;
                 }).catch((response) => {
                     this.uploading = false;
-                    alert('Upload failed! If this issue persists please file a bug.');
+                    this.uploadError = response.message || 'Upload failed. Please try again later or add the image by URL.';
                 });
         },
         removeItemImage() {

@@ -383,47 +383,71 @@ function imageUpload(req, res, user) {
     const form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
         if (err) {
-            logWithRequest(req, 'form parse error');
-            return res.status(500).json({ message: 'An error occurred' });
-        }
-        if (!files || !files.image) {
-            logWithRequest(req, 'No image in upload');
-            return res.status(500).json({ message: 'An error occurred' });
+            logWithRequest(req, { message: 'Image upload form parse error', error: err });
+            return res.status(400).json({ message: 'We could not read that image upload. Please try again.' });
         }
 
-        const path = files.image.path;
-        const formData = {
-            image: fs.createReadStream(path),
-            type: "file"
-        };
-        request.post({
-            url: 'https://api.imgur.com/3/image',
-            headers: { Authorization: `Client-ID ${config.get('imgurClientID')}` },
-            formData
-        }, (e, r, body) => {
-            if (e) {
-                logWithRequest(req, 'imgur post fail!');
-                logWithRequest(req, e);
-                logWithRequest(req, body);
-                return res.status(500).json({ message: 'An error occurred.' });
-            } if (!body) {
-                logWithRequest(req, 'imgur post fail!!');
-                logWithRequest(req, e);
-                return res.status(500).json({ message: 'An error occurred.' });
-            } if (r.statusCode !== 200 || body.error) {
-                logWithRequest(req, 'imgur post fail!!!');
-                logWithRequest(req, e);
-                logWithRequest(req, body);
-                return res.status(500).json({ message: 'An error occurred.' });
-            }
-            logWithRequest(req, body);
-            return res.send(body);
-        });
+        return handleParsedImageUpload(req, res, files);
+    });
+}
+
+function handleParsedImageUpload(req, res, files, options = {}) {
+    const image = files && files.image;
+    if (!image) {
+        logWithRequest(req, 'No image in upload');
+        return res.status(400).json({ message: 'Please choose an image to upload.' });
+    }
+
+    const imagePath = image.path || image.filepath;
+    if (!imagePath) {
+        logWithRequest(req, 'Image upload missing temporary path');
+        return res.status(400).json({ message: 'We could not read that image upload. Please try again.' });
+    }
+
+    const imgurClientID = typeof options.imgurClientID === 'undefined' ? config.get('imgurClientID') : options.imgurClientID;
+    if (!imgurClientID) {
+        logWithRequest(req, 'Image upload attempted without imgurClientID');
+        return res.status(503).json({ message: 'Image uploads are temporarily unavailable. Add the image by URL instead.' });
+    }
+
+    const post = options.post || request.post;
+    const createReadStream = options.createReadStream || fs.createReadStream;
+    const formData = {
+        image: createReadStream(imagePath),
+        type: 'file',
+    };
+
+    return post({
+        url: 'https://api.imgur.com/3/image',
+        headers: { Authorization: `Client-ID ${imgurClientID}` },
+        formData,
+    }, (err, response, body) => {
+        if (err) {
+            logWithRequest(req, { message: 'Imgur upload request failed', error: err });
+            return res.status(502).json({ message: 'The image upload service could not be reached. Please try again later or add the image by URL.' });
+        }
+
+        let parsedBody;
+        try {
+            parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+        } catch (parseErr) {
+            logWithRequest(req, { message: 'Imgur upload returned invalid JSON', body });
+            return res.status(502).json({ message: 'The image upload service returned an invalid response. Please try again later or add the image by URL.' });
+        }
+
+        if (!response || response.statusCode !== 200 || !parsedBody || parsedBody.error || !parsedBody.data || !parsedBody.data.id) {
+            logWithRequest(req, { message: 'Imgur upload failed', statusCode: response && response.statusCode, body: parsedBody || body });
+            return res.status(502).json({ message: 'The image upload service rejected this image. Please try again later or add the image by URL.' });
+        }
+
+        logWithRequest(req, { message: 'Imgur upload succeeded', imageId: parsedBody.data.id });
+        return res.status(200).json(parsedBody);
     });
 }
 
 router._test = {
     saveLibrary,
+    handleParsedImageUpload,
     setDb(testDb) {
         db = testDb;
     },
