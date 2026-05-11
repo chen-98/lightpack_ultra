@@ -30,3 +30,4 @@
 | 2026-05-10 | Task 4.1: 快速录入模式 | 支持 Enter 连续新增装备；支持粘贴多行 `名称 + 重量 + 单位` 批量录入；新增 quick-entry 解析测试 | `npm run test:unit`; `npm run check` | `feat: add quick entry shortcuts` |
 | 2026-05-10 | Task 4.2: 重量洞察面板 | 新增 `List.getWeightInsights()`；在列表摘要中展示最重分类和最重装备；增加洞察排序单元测试 | `npm run test:unit`; `npm run check` | `feat: add weight insights panel` |
 | 2026-05-10 | Task 4.3: 分享页增强 | 分享页和嵌入页增加重量摘要；分享页展示最重分类占比；服务端复用重量洞察数据 | `npm run check` | `feat: enhance shared list summary` |
+| 2026-05-11 | 工程边界: 文档与追溯；产品哲学: 发布策略 | 新增协作规则、架构说明和决策记录文档；在 README 和现代化计划中加入文档维护入口 | 人工检查文档；`git diff --check` | `docs: add workflow guardrails` |

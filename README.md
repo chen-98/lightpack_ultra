@@ -5,8 +5,11 @@ LighterPack helps you track the gear you bring on adventures.
 Project planning
 ----------------
 
+Before making product or code changes, review [docs/working-agreement.md](docs/working-agreement.md).
 Modernization and feature planning lives in [docs/modernization-plan.md](docs/modernization-plan.md).
 Product philosophy and feature review guidance lives in [docs/product-philosophy.md](docs/product-philosophy.md).
+Architecture context lives in [docs/architecture-notes.md](docs/architecture-notes.md).
+Long-lived decisions live in [docs/decision-records.md](docs/decision-records.md).
 Traceable change records live in [docs/change-log.md](docs/change-log.md).
 
 Development setup
