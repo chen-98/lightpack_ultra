@@ -32,3 +32,4 @@
 | 2026-05-10 | Task 4.3: 分享页增强 | 分享页和嵌入页增加重量摘要；分享页展示最重分类占比；服务端复用重量洞察数据 | `npm run check` | `feat: enhance shared list summary` |
 | 2026-05-11 | 工程边界: 文档与追溯；产品哲学: 发布策略 | 新增协作规则、架构说明和决策记录文档；在 README 和现代化计划中加入文档维护入口 | 人工检查文档；`git diff --check` | `docs: add workflow guardrails` |
 | 2026-05-11 | 文档维护: 现代化计划瘦身 | 将 `modernization-plan.md` 精简为路线图首页；把架构边界和迁移路线移入 `architecture-notes.md`；把重建条件和文档职责决策移入 `decision-records.md` | 人工检查文档；`git diff --check` | `docs: streamline modernization plan` |
+| 2026-05-11 | 协作规则: 提交和追溯 | 在 working agreement 中明确充分验收后应及时提交 commit，并要求 commit message 能回溯改动范围、目的和验证方式 | 人工检查文档；`git diff --check` | `docs: clarify commit traceability rule` |

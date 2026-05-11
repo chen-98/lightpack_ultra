@@ -35,6 +35,7 @@
 - 新功能要有明确验收标准。
 - 能自动测试就自动测试；不能自动测试时，记录手动验证方式。
 - 完成后更新 `docs/change-log.md`，并关联 commit 主题。
+- 充分验收当前改动后，应及时提交 commit；commit message 要完整说明可回溯的改动内容，而不仅是简短标签。
 
 ## Definition of Done
 
@@ -44,4 +45,5 @@
 2. 对应计划、决策或架构文档已更新，或明确说明不需要更新。
 3. 验证已完成，至少包含 `npm run check` 或明确的替代验证。
 4. `docs/change-log.md` 已记录改动内容、验证方式和 commit reference。
-5. git status 中没有意外文件被纳入提交。
+5. 验收后已及时提交 commit，且 commit message 能回溯本次改动的范围、目的和验证方式。
+6. git status 中没有意外文件被纳入提交。
