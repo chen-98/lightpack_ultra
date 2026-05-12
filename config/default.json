@@ -1,4 +1,3 @@
-
 {
     "environment"   : "development",
     "deployUrl": "http://localhost:3000",

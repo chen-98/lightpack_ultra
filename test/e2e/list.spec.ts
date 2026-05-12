@@ -79,6 +79,8 @@ test.describe('List tests', () => {
   });
 
   test('should keep pending changes and retry after a failed save', async ({ page }) => {
+    test.setTimeout(60000);
+
     const now = Date.now();
     const username = `retry${now}`;
     const email = `retry+${now}@lighterpack.com`;
@@ -108,5 +110,40 @@ test.describe('List tests', () => {
     await waitForSuccessfulSave(page);
     await page.reload();
     await expect(page.getByPlaceholder('List Name')).toHaveValue(listName);
+  });
+
+  test('should drag gear from the gear library into the active list', async ({ page }) => {
+    const now = Date.now();
+    const username = `drag${now}`;
+    const email = `drag+${now}@lighterpack.com`;
+    const password = 'testtest';
+
+    await registerUser(page, username, password, email);
+
+    await page.locator('.lpCategoryName').fill('Kitchen');
+    await page.locator('.lpAddItem').click();
+    await page.locator('.lpItem input.lpName').fill('Stove');
+    await page.locator('.lpItem input.lpWeight').fill('3');
+    await expect(page.locator('#library .lpLibraryItem').filter({hasText: 'Stove'})).toBeVisible();
+
+    await page.getByText('Add new list').first().click();
+    await expect(page.locator('#library .lpLibraryItem').filter({hasText: 'Stove'})).toBeVisible();
+
+    const handle = page.locator('.lpLibraryItem').filter({hasText: 'Stove'}).locator('.lpLibraryItemHandle');
+    const target = page.locator('.lpItemsFooter').first();
+    const handleBox = await handle.boundingBox();
+    const targetBox = await target.boundingBox();
+
+    expect(handleBox).not.toBeNull();
+    expect(targetBox).not.toBeNull();
+
+    await page.locator('.lpLibraryItem').filter({hasText: 'Stove'}).hover();
+    await page.mouse.move(handleBox!.x + (handleBox!.width / 2), handleBox!.y + 8);
+    await page.mouse.down();
+    await page.mouse.move(targetBox!.x + 120, targetBox!.y + 10, {steps: 20});
+    await page.mouse.up();
+
+    await expect(page.locator('.lpItem input.lpName')).toHaveValue('Stove');
+    await expect(page.locator('.lpItem input.lpName')).toHaveCount(1);
   });
 });

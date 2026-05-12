@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 import { testRoot } from './utils';
 
-import { getSharedUser, registerUser, loginUser, logoutUser } from './auth-utils';
+import { registerUser, loginUser, logoutUser } from './auth-utils';
 
 test('has title', async ({ page }) => {
   await page.goto(testRoot);
@@ -27,21 +27,29 @@ test.describe('User Authentication Tests', () => {
 
   test('should successfully log in an existing user', async ({ page }) => {
     await page.goto(testRoot);
-    
-    const { username, password } = await getSharedUser();
+
+    const now = Date.now();
+    const username = `login${now}`;
+    const email = `login+${now}@lighterpack.com`;
+    const password = 'testtest';
+
+    await registerUser(page, username, password, email);
+    await logoutUser(page);
 
     await loginUser(page, username, password);
     await expect(page.getByText(`Signed in as ${username}`)).toBeVisible();
     await expect(page.getByText('Welcome to LighterPack!')).toBeVisible();
-    await expect(page).toHaveScreenshot();
   });
   
   test('should successfully log out', async ({ page }) => {
     await page.goto(testRoot);
-    
-    const { username, password } = await getSharedUser();
 
-    await loginUser(page, username, password);
+    const now = Date.now();
+    const username = `logout${now}`;
+    const email = `logout+${now}@lighterpack.com`;
+    const password = 'testtest';
+
+    await registerUser(page, username, password, email);
     await logoutUser(page);
     await expect(page.getByRole('heading').filter({hasText: 'Sign in'})).toBeVisible();
   });

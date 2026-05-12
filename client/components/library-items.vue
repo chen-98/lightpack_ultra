@@ -149,6 +149,20 @@ import utilsMixin from '../mixins/utils-mixin.js';
 
 const dragula = require('dragula');
 
+const getItemDropIndex = function ($el) {
+    let index = 0;
+    let sibling = $el.previousElementSibling;
+
+    while (sibling) {
+        if (!sibling.classList.contains('lpItemsHeader') && !sibling.classList.contains('lpItemsFooter')) {
+            index++;
+        }
+        sibling = sibling.previousElementSibling;
+    }
+
+    return index;
+};
+
 export default {
     name: 'LibraryItem',
     mixins: [utilsMixin],
@@ -241,7 +255,7 @@ export default {
                     return $handle.classList.contains('lpLibraryItemHandle');
                 },
                 accepts($el, $target, $source, $sibling) {
-                    if ($target.id === 'library' || !$sibling || $sibling.classList.contains('lpItemsHeader')) {
+                    if ($target.id === 'library' || ($sibling && $sibling.classList.contains('lpItemsHeader'))) {
                         return false; // header and footer are technically part of this list - exclude them both.
                     }
                     return true;
@@ -255,7 +269,7 @@ export default {
                     return;
                 }
                 const categoryId = parseInt($target.parentElement.id); // fragile
-                this.$store.commit('addItemToCategory', { itemId: this.itemDragId, categoryId, dropIndex: getElementIndex($el) - 1 });
+                this.$store.commit('addItemToCategory', { itemId: this.itemDragId, categoryId, dropIndex: getItemDropIndex($el) });
                 drake.cancel(true);
             });
             this.drake = drake;

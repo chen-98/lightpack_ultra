@@ -8,6 +8,7 @@
     "start": "node --openssl-legacy-provider ./node_modules/webpack-cli/bin/cli.js --config ./webpack.config.js && node --openssl-legacy-provider app.js",
     "build": "node --openssl-legacy-provider ./node_modules/webpack-cli/bin/cli.js --config ./webpack.config.js",
     "test:unit": "node --test \"test/unit/*.test.js\"",
+    "test:e2e:install": "playwright install",
     "test:e2e": "playwright test",
     "check": "npm run test:unit && npm run build",
     "lint:css": "./node_modules/.bin/stylelint \"client/**/*.{scss,vue}\" --fix",

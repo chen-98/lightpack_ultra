@@ -79,6 +79,12 @@
 - 迁移不改变 saved library JSON。
 - 分享页、CSV 和客户端摘要使用一致的数据来源或共享 fixture 验证。
 
+补充任务：
+
+- Task 3.2: 修复用户先录入装备、后补 category name 时，装备不会获得默认 `gearTags` 的遗漏路径。
+- 回填只针对 `gearTags` 为空的装备，不覆盖、不追加已有 tag；category 从一个非空名称改成另一个非空名称时，不自动同步已有装备 tag。
+- 增加单元测试覆盖回填规则，并保持 `npm run check` 通过。
+
 ### P3: 旅行计划模型设计
 
 目标：
@@ -117,6 +123,15 @@
 | API | 新接口要有输入校验、错误返回和鉴权边界 |
 | 文档 | 重要决策写入 `decision-records.md`，已完成改动写入 `change-log.md` |
 | 命名 | 用业务名表达含义，例如 `GearType` 优于模糊的 `Type` |
+| 追溯 | 每次改动必须在 `docs/change-log.md` 中关联目标、记录验证方式和 commit |
+| 提交 | 每个小功能点独立 commit，避免把无关变更混入同一个提交 |
+
+### 测试执行约定
+
+- 每个 commit 或一批强相关 commits 前，至少运行 `npm run check`。
+- 涉及用户流程、拖拽、筛选、分享、登录、路由或布局交互的改动，必须运行 `npm run test:e2e` 或对应的 Playwright 定向测试。
+- 新开发环境在运行 e2e 前必须执行 `npm run test:e2e:install`，安装 Playwright 浏览器。
+- 修复交互回归时，应先补一条能复现问题的 e2e smoke test，再改实现。
 
 ## 当前风险
 

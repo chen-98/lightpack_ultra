@@ -38,3 +38,7 @@
 | 2026-05-11 | 文档维护: 现代化计划瘦身 | 将 `modernization-plan.md` 精简为路线图首页；把架构边界和迁移路线移入 `architecture-notes.md`；把重建条件和文档职责决策移入 `decision-records.md` | 人工检查文档；`git diff --check` | `docs: streamline modernization plan` |
 | 2026-05-11 | 协作规则: 提交和追溯 | 在 working agreement 中明确充分验收后应及时提交 commit，并要求 commit message 能回溯改动范围、目的和验证方式 | 人工检查文档；`git diff --check` | `docs: clarify commit traceability rule` |
 | 2026-05-11 | 维护基线: 本地运行产物 | 在 `.gitignore` 中忽略 `/tmp/`，避免 dev server 日志和其他本地运行产物反复出现在未跟踪文件中或被误提交 | `git status --short` | `chore: ignore local runtime logs` |
+| 2026-05-11 | Task 3.2: 空分类命名后的默认标签回填 | 记录先录入装备、后补 category name 时应为未打 tag 装备回填默认 `gearTags` 的产品规则；明确不使用编辑时弹窗、不做 category/tag 永久同步 | 人工检查文档 | `docs: document category tag backfill behavior` |
+| 2026-05-11 | 产品哲学: 标签系统原则 | 补充 tag 系统设计原则，明确 category 与 tag 的边界、默认 tag 的轻交互方式、空 tag 合法性和复杂能力的延后条件 | 人工检查文档 | `docs: document tag system philosophy` |
+| 2026-05-11 | 工程边界: 测试执行约定 | 新增 Playwright 浏览器安装脚本；README 记录 e2e 安装和测试期望；现代化计划补充每批提交的测试执行规则；修复 e2e 对固定用户和动态截图的依赖；补 Linux 截图基线并忽略本地 MongoDB 数据目录 | `npm run test:e2e:install`; `npm run check`; `npm run test:e2e` | `chore: document e2e test setup` |
+| 2026-05-11 | 阶段 3: 装备分类体系；工程边界: 交互回归保护 | 修复 Gear 侧栏装备拖入当前清单时对 drop 位置过于苛刻的问题；拖入装备时清理目标分类空占位行；新增 Playwright 覆盖 Gear 到 list 的真实鼠标拖拽路径 | `npm run check`; `npx playwright test test/e2e/list.spec.ts --project=chromium`; `npm run test:e2e` | `fix: restore gear library drag into lists` |

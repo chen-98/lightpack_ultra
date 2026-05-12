@@ -24,6 +24,7 @@ Install dependencies:
 
 ```sh
 npm install
+npm run test:e2e:install
 ```
 
 Create local configuration when needed:
@@ -48,6 +49,12 @@ npm run build
 npm run check
 npm run test:e2e
 ```
+
+Testing expectations:
+
+- Run `npm run check` before each commit or small batch of related commits.
+- Run `npm run test:e2e` when changing user workflows, drag/drop behavior, routing, authentication, sharing, or layout that can affect interactions.
+- If Playwright reports missing browsers, run `npm run test:e2e:install`.
 
 Note: this project currently uses an older Webpack toolchain. The npm scripts pass
 `--openssl-legacy-provider` so the app can run on modern Node.js versions that use

@@ -1,5 +1,6 @@
 extIds.txt
 node_modules
+data/
 .DS_Store
 /config/local.json
 /public/dist/*

@@ -162,6 +162,10 @@ const store = new Vuex.Store({
             const dropCategory = state.library.getCategoryById(args.categoryId);
 
             if (item && dropCategory) {
+                dropCategory.categoryItems = dropCategory.categoryItems.filter((categoryItem) => {
+                    const categoryItemItem = state.library.getItemById(categoryItem.itemId);
+                    return categoryItemItem && !categoryItemItem.isEmpty();
+                });
                 dropCategory.addItem({ itemId: item.id });
                 const categoryItem = dropCategory.getCategoryItemById(item.id);
                 const categoryItemIndex = dropCategory.categoryItems.indexOf(categoryItem);
