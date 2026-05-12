@@ -31,5 +31,10 @@
 | 2026-05-10 | Task 4.2: 重量洞察面板 | 新增 `List.getWeightInsights()`；在列表摘要中展示最重分类和最重装备；增加洞察排序单元测试 | `npm run test:unit`; `npm run check` | `feat: add weight insights panel` |
 | 2026-05-10 | Task 4.3: 分享页增强 | 分享页和嵌入页增加重量摘要；分享页展示最重分类占比；服务端复用重量洞察数据 | `npm run check` | `feat: enhance shared list summary` |
 | 2026-05-11 | 工程边界: 文档与追溯；产品哲学: 发布策略 | 新增协作规则、架构说明和决策记录文档；在 README 和现代化计划中加入文档维护入口 | 人工检查文档；`git diff --check` | `docs: add workflow guardrails` |
+| 2026-05-11 | P1: 后端接口整理；核心服务可靠性: 保存链路 | 强化 `/saveLibrary`：数据库保存失败不再返回成功；前端区分已保存和待保存数据，保存失败保留 pending change 并自动重试；新增保存状态提示和保存单元/E2E 场景 | `npm run test:unit`; `npm run build`; E2E 因本机缺少 MongoDB 未完成 | `fix: harden library save flow` |
+| 2026-05-11 | P1: 后端接口整理；核心服务可靠性: 图片上传 | 强化图片上传错误处理：区分无文件、未配置、上游不可达、无效 JSON 和上游拒绝；修复前端图片类型校验；上传失败在弹窗内展示可操作错误信息；新增图片上传单元测试 | `npm run test:unit`; `npm run build` | `fix: harden image upload handling` |
+| 2026-05-11 | 工程边界: 代理协作规范 | 新增 `AGENT.md`，记录本仓库给代理执行任务时需要遵守的工作流、验证和提交约定 | 人工检查文档 | `docs: add agent workflow guide` |
+| 2026-05-11 | 维护基线: 配置合法性 | 移除 `config/default.json` 中的 JavaScript 风格注释，保持默认配置为合法 JSON；部署覆盖仍使用 `config/local.json` | `git diff --check`; `Get-Content config\default.json -Raw \| ConvertFrom-Json \| Out-Null` | `fix: keep default config valid JSON` |
 | 2026-05-11 | 文档维护: 现代化计划瘦身 | 将 `modernization-plan.md` 精简为路线图首页；把架构边界和迁移路线移入 `architecture-notes.md`；把重建条件和文档职责决策移入 `decision-records.md` | 人工检查文档；`git diff --check` | `docs: streamline modernization plan` |
 | 2026-05-11 | 协作规则: 提交和追溯 | 在 working agreement 中明确充分验收后应及时提交 commit，并要求 commit message 能回溯改动范围、目的和验证方式 | 人工检查文档；`git diff --check` | `docs: clarify commit traceability rule` |
+| 2026-05-11 | 维护基线: 本地运行产物 | 在 `.gitignore` 中忽略 `/tmp/`，避免 dev server 日志和其他本地运行产物反复出现在未跟踪文件中或被误提交 | `git status --short` | `chore: ignore local runtime logs` |
