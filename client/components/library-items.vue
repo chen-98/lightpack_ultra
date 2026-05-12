@@ -52,6 +52,10 @@
         color: #fff;
     }
 
+    &.lpInCurrentList {
+        opacity: 0.55;
+    }
+
     .lpName {
         float: left;
         margin: 0;
@@ -82,6 +86,18 @@
         overflow: hidden;
         text-overflow: ellipsis;
         width: 235px;
+    }
+
+    .lpLibraryItemStatus {
+        background: #555;
+        border: 1px solid #777;
+        color: #ddd;
+        float: right;
+        font-size: 10px;
+        line-height: 1;
+        margin-left: 8px;
+        padding: 3px 5px;
+        text-transform: uppercase;
     }
 
     .lpHandle {
@@ -124,9 +140,12 @@
             <option v-for="tag in availableTags" :key="tag" :value="tag">{{ tag }}</option>
         </select>
         <ul id="library">
-            <li v-for="item in filteredItems" class="lpLibraryItem" :data-item-id="item.id">
+            <li v-for="item in filteredItems" class="lpLibraryItem" :class="{lpInCurrentList: item.inCurrentList}" :data-item-id="item.id">
                 <a v-if="item.url" :href="item.url" target="_blank" class="lpName lpHref">{{ item.name }}</a>
                 <span v-if="!item.url" class="lpName">{{ item.name }}</span>
+                <span v-if="item.inCurrentList" class="lpLibraryItemStatus" title="Already added to the current list">
+                    Added
+                </span>
                 <span class="lpWeight">
                     {{ item.weight | displayWeight(item.authorUnit) }}
                     {{ item.authorUnit }}

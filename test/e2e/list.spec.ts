@@ -127,9 +127,11 @@ test.describe('List tests', () => {
     await expect(page.locator('#library .lpLibraryItem').filter({hasText: 'Stove'})).toBeVisible();
 
     await page.getByText('Add new list').first().click();
-    await expect(page.locator('#library .lpLibraryItem').filter({hasText: 'Stove'})).toBeVisible();
+    const libraryItem = page.locator('#library .lpLibraryItem').filter({hasText: 'Stove'});
+    await expect(libraryItem).toBeVisible();
+    await expect(libraryItem).not.toHaveClass(/lpInCurrentList/);
 
-    const handle = page.locator('.lpLibraryItem').filter({hasText: 'Stove'}).locator('.lpLibraryItemHandle');
+    const handle = libraryItem.locator('.lpLibraryItemHandle');
     const target = page.locator('.lpItemsFooter').first();
     const handleBox = await handle.boundingBox();
     const targetBox = await target.boundingBox();
@@ -145,5 +147,8 @@ test.describe('List tests', () => {
 
     await expect(page.locator('.lpItem input.lpName')).toHaveValue('Stove');
     await expect(page.locator('.lpItem input.lpName')).toHaveCount(1);
+    await expect(libraryItem).toHaveClass(/lpInCurrentList/);
+    await expect(libraryItem).toContainText('Added');
+    await expect(libraryItem.locator('.lpLibraryItemHandle')).toHaveCount(0);
   });
 });
