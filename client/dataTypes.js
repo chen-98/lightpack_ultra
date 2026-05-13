@@ -28,6 +28,24 @@ function normalizeGearTags(gearTags) {
         });
 }
 
+function backfillCategoryDefaultGearTags(category, previousName) {
+    if (!category || String(previousName || '').trim()) {
+        return;
+    }
+
+    const defaultTags = normalizeGearTags([category.name]);
+    if (!defaultTags.length) {
+        return;
+    }
+
+    category.categoryItems.forEach((categoryItem) => {
+        const item = category.library.getItemById(categoryItem.itemId);
+        if (item && !normalizeGearTags(item.gearTags).length) {
+            item.gearTags = defaultTags.slice();
+        }
+    });
+}
+
 const Item = function ({ id, unit }) {
     this.id = id;
     this.name = '';
@@ -863,4 +881,5 @@ module.exports = {
     Category,
     Item,
     normalizeGearTags,
+    backfillCategoryDefaultGearTags,
 };

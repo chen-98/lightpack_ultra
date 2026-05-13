@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { Library, normalizeGearTags } = require('../../client/dataTypes.js');
+const { Library, backfillCategoryDefaultGearTags, normalizeGearTags } = require('../../client/dataTypes.js');
 const weight = require('../../client/utils/weight.js');
 
 test('default placeholder item does not affect totals', () => {
@@ -160,6 +160,69 @@ test('new items inherit the current category name as their default gear tag', ()
     const item = library.newItem({ category });
 
     assert.deepEqual(item.gearTags, ['Kitchen']);
+});
+
+test('items in an unnamed category get the category default gear tag after naming', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const item = library.getItemById(category.categoryItems[0].itemId);
+    const otherCategory = library.newCategory({ list });
+    const otherItem = library.newItem({ category: otherCategory });
+
+    item.name = 'Tarp';
+    delete item.gearTags;
+    otherItem.name = 'Bottle';
+    category.name = 'Shelter';
+
+    backfillCategoryDefaultGearTags(category, '');
+
+    assert.deepEqual(item.gearTags, ['Shelter']);
+    assert.deepEqual(otherItem.gearTags, []);
+});
+
+test('category default gear tag backfill does not overwrite existing gear tags', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const item = library.getItemById(category.categoryItems[0].itemId);
+
+    item.name = 'Quilt';
+    item.gearTags = ['Sleep'];
+    category.name = 'Shelter';
+
+    backfillCategoryDefaultGearTags(category, '');
+
+    assert.deepEqual(item.gearTags, ['Sleep']);
+});
+
+test('category default gear tag backfill does not sync non-empty category renames', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const item = library.getItemById(category.categoryItems[0].itemId);
+
+    item.name = 'Stake';
+    item.gearTags = [];
+    category.name = 'New';
+
+    backfillCategoryDefaultGearTags(category, 'Old');
+
+    assert.deepEqual(item.gearTags, []);
+});
+
+test('category default gear tag backfill ignores blank category names', () => {
+    const library = new Library();
+    const list = library.getListById(library.defaultListId);
+    const category = library.getCategoryById(list.categoryIds[0]);
+    const item = library.getItemById(category.categoryItems[0].itemId);
+
+    item.name = 'Groundsheet';
+    category.name = '   ';
+
+    backfillCategoryDefaultGearTags(category, '');
+
+    assert.deepEqual(item.gearTags, []);
 });
 
 test('old saved items without gear tags load with an empty tag list', () => {

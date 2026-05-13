@@ -43,3 +43,4 @@
 | 2026-05-11 | 工程边界: 测试执行约定 | 新增 Playwright 浏览器安装脚本；README 记录 e2e 安装和测试期望；现代化计划补充每批提交的测试执行规则；修复 e2e 对固定用户和动态截图的依赖；补 Linux 截图基线并忽略本地 MongoDB 数据目录 | `npm run test:e2e:install`; `npm run check`; `npm run test:e2e` | `chore: document e2e test setup` |
 | 2026-05-11 | 阶段 3: 装备分类体系；工程边界: 交互回归保护 | 修复 Gear 侧栏装备拖入当前清单时对 drop 位置过于苛刻的问题；拖入装备时清理目标分类空占位行；新增 Playwright 覆盖 Gear 到 list 的真实鼠标拖拽路径 | `npm run check`; `npx playwright test test/e2e/list.spec.ts --project=chromium`; `npm run test:e2e` | `fix: restore gear library drag into lists` |
 | 2026-05-12 | 阶段 3: 装备分类体系；Gear 侧栏可见状态 | 当前清单已包含的 Gear 侧栏装备显示为置灰状态并标记 `Added`，同时继续隐藏拖拽手柄，减少重复添加误操作；扩展 Gear 拖拽 E2E 断言覆盖该状态 | `npm run check`; 定向 Playwright 本地运行因缺少 MongoDB 阻塞 | `feat: mark added gear in sidebar` |
+| 2026-05-13 | Task 3.2: 空分类命名后的默认标签回填 | 当空白 category 首次命名为非空名称时，为该 category 内没有 `gearTags` 的装备安静回填默认 tag；已有 tag、非空改名和空白名称不触发同步 | `npm run test:unit`; `npm run check` | `fix: backfill category tags after naming` |

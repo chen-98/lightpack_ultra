@@ -9,6 +9,7 @@ const Item = dataTypes.Item;
 const Category = dataTypes.Category;
 const List = dataTypes.List;
 const Library = dataTypes.Library;
+const backfillCategoryDefaultGearTags = dataTypes.backfillCategoryDefaultGearTags;
 
 const saveInterval = 10000;
 
@@ -189,7 +190,9 @@ const store = new Vuex.Store({
         },
         updateCategoryName(state, updatedCategory) {
             const category = state.library.getCategoryById(updatedCategory.id);
+            const previousName = category.name;
             category.name = updatedCategory.name;
+            backfillCategoryDefaultGearTags(category, previousName);
             state.library.getListById(state.library.defaultListId).calculateTotals();
         },
         updateCategoryColor(state, updatedCategory) {
