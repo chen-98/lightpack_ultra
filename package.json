@@ -9,7 +9,10 @@
     "build": "node --openssl-legacy-provider ./node_modules/webpack-cli/bin/cli.js --config ./webpack.config.js",
     "test:unit": "node --test \"test/unit/*.test.js\"",
     "test:e2e:install": "playwright install",
-    "test:e2e": "playwright test",
+    "test:e2e:check-db": "node -e \"const net=require('net');let done=false;const s=net.connect({host:'127.0.0.1',port:27017},()=>finish(0));function finish(code){if(done)return;done=true;if(code)console.error('MongoDB is required for full e2e tests at localhost:27017. Start mongod, then retry.');s.destroy();process.exit(code);}s.setTimeout(1500,()=>finish(1));s.on('error',()=>finish(1));\"",
+    "test:e2e:smoke": "playwright test test/e2e/auth.spec.ts -g \"has title\" --project=chromium --reporter=line",
+    "test:e2e:chromium": "npm run test:e2e:check-db && playwright test --project=chromium --reporter=line",
+    "test:e2e": "npm run test:e2e:check-db && playwright test",
     "check": "npm run test:unit && npm run build",
     "lint:css": "./node_modules/.bin/stylelint \"client/**/*.{scss,vue}\" --fix",
     "lint:js": "./node_modules/.bin/eslint --ext .vue --ext .js ./ --fix"

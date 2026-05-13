@@ -47,14 +47,20 @@ Useful commands:
 ```sh
 npm run build
 npm run check
+npm run test:e2e:smoke
+npm run test:e2e:chromium
 npm run test:e2e
 ```
 
 Testing expectations:
 
+- Run the smallest relevant command first: a focused unit test, `npm run test:unit`, or `npm run check`.
 - Run `npm run check` before each commit or small batch of related commits.
-- Run `npm run test:e2e` when changing user workflows, drag/drop behavior, routing, authentication, sharing, or layout that can affect interactions.
+- Run `npm run test:e2e:smoke` when you need a quick browser/server sanity check.
+- Run `npm run test:e2e:chromium` when changing user workflows, drag/drop behavior, routing, authentication, sharing, or layout that can affect interactions.
+- Run full `npm run test:e2e` before release or when a change is browser-specific and needs both Chromium and Firefox coverage.
 - If Playwright reports missing browsers, run `npm run test:e2e:install`.
+- End-to-end tests require MongoDB on `localhost:27017`.
 
 Note: this project currently uses an older Webpack toolchain. The npm scripts pass
 `--openssl-legacy-provider` so the app can run on modern Node.js versions that use

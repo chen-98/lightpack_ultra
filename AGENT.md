@@ -97,11 +97,16 @@ Use project-specific commands where available.
 Common commands:
 - Unit tests: `npm run test:unit`
 - Build and unit check: `npm run check`
-- End-to-end tests: `npm run test:e2e`
+- Fast browser smoke test: `npm run test:e2e:smoke`
+- Chromium end-to-end tests: `npm run test:e2e:chromium`
+- Full cross-browser end-to-end tests: `npm run test:e2e`
 
 At minimum, after code changes:
 - Run the smallest relevant test first.
 - Run `npm run check` when the task touches shared code, public APIs, data model behavior, persistence, sharing output, or user-facing workflows.
+- Run `npm run test:e2e:smoke` for a quick server/browser sanity check.
+- Run `npm run test:e2e:chromium` when the task changes user workflows, drag/drop behavior, routing, authentication, sharing, or layout that can affect interactions.
+- Reserve full `npm run test:e2e` for release checks or changes that need browser-specific Chromium and Firefox coverage.
 - If tests cannot be run, explain why and provide the exact command the user should run.
 
 ## Multi-Agent Safety
