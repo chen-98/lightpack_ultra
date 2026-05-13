@@ -44,3 +44,4 @@
 | 2026-05-11 | 阶段 3: 装备分类体系；工程边界: 交互回归保护 | 修复 Gear 侧栏装备拖入当前清单时对 drop 位置过于苛刻的问题；拖入装备时清理目标分类空占位行；新增 Playwright 覆盖 Gear 到 list 的真实鼠标拖拽路径 | `npm run check`; `npx playwright test test/e2e/list.spec.ts --project=chromium`; `npm run test:e2e` | `fix: restore gear library drag into lists` |
 | 2026-05-12 | 阶段 3: 装备分类体系；Gear 侧栏可见状态 | 当前清单已包含的 Gear 侧栏装备显示为置灰状态并标记 `Added`，同时继续隐藏拖拽手柄，减少重复添加误操作；扩展 Gear 拖拽 E2E 断言覆盖该状态 | `npm run check`; 定向 Playwright 本地运行因缺少 MongoDB 阻塞 | `feat: mark added gear in sidebar` |
 | 2026-05-13 | Task 3.2: 空分类命名后的默认标签回填 | 当空白 category 首次命名为非空名称时，为该 category 内没有 `gearTags` 的装备安静回填默认 tag；已有 tag、非空改名和空白名称不触发同步 | `npm run test:unit`; `npm run check` | `fix: backfill category tags after naming` |
+| 2026-05-13 | 产品哲学: 用户需求调研；近期优先级: 核心服务可靠性和数据边界 | 新增上游 GitHub 用户调研沉淀，按保存可靠性、图片上传、部署维护、数据导出、装备复用、重量语义和编辑体验归纳当前用户痛点与需求优先级 | GitHub Issues/PR API refresh; `git diff --check` | `docs: add upstream user research summary` |
