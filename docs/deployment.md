@@ -32,17 +32,19 @@ Edit `config/local.json` before starting the stack:
 - Keep `"environment": "production"`.
 - Keep `"port": 3000` and `"bindings": ["0.0.0.0"]`.
 - Keep `"databaseUrl": "mongodb://mongo:27017/lighterpack"`.
-- Set `deployUrl` and `publicUrl` to the real public URL.
+- While the domain is not ready, set `deployUrl` and `publicUrl` to
+  `http://SERVER_IP`. After DNS is ready, change both values to the real
+  `https://` domain.
 - Fill `imgurClientID` and Mailgun values only if those services are used.
 - Do not commit `config/local.json`; it contains production-only settings.
 
 Edit `Caddyfile` and choose one active site block:
 
-- Domain ready: use `your-domain.example.com { reverse_proxy app:3000 }` with
-  the real domain. Caddy will enable HTTPS automatically after DNS is valid.
-- Domain not ready: comment out the domain block and use the `:80` block for
-  temporary `http://SERVER_IP/` testing. Switch back to the domain block when DNS
-  is ready.
+- Domain not ready: the default `:80` block can be used directly for temporary
+  `http://SERVER_IP/` testing.
+- Domain ready: switch to the real domain block, then update `deployUrl` and
+  `publicUrl` in `config/local.json` to the `https://` domain. Caddy will enable
+  HTTPS automatically after DNS is valid.
 
 Start the stack:
 
