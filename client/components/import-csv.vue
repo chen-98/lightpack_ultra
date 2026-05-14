@@ -3,7 +3,7 @@
 #importValidate {
     height: 500px;
     overflow-y: scroll;
-    width: 650px;
+    width: 900px;
 
     .lpButton {
         margin-bottom: 30px;
@@ -25,6 +25,10 @@
                         <span class="lpCell">Qty</span>
                         <span class="lpCell">Weight</span>
                         <span class="lpCell">Unit</span>
+                        <span class="lpCell">URL</span>
+                        <span class="lpCell">Price</span>
+                        <span class="lpCell">Worn</span>
+                        <span class="lpCell">Consumable</span>
                     </li>
                     <li v-for="row in importData.data" class="lpRow">
                         <span class="lpCell">{{ row.name }}</span>
@@ -33,6 +37,10 @@
                         <span class="lpCell">{{ row.qty }}</span>
                         <span class="lpCell">{{ row.weight }}</span>
                         <span class="lpCell">{{ row.unit }}</span>
+                        <span class="lpCell">{{ row.url }}</span>
+                        <span class="lpCell">{{ row.price }}</span>
+                        <span class="lpCell">{{ row.worn ? 'Yes' : '' }}</span>
+                        <span class="lpCell">{{ row.consumable ? 'Yes' : '' }}</span>
                     </li>
                 </ul>
             </div>
@@ -48,6 +56,8 @@
 <script>
 import modal from './modal.vue';
 
+const csvImport = require('../utils/csv-import.js');
+
 export default {
     name: 'ImportCsv',
     components: {
@@ -58,9 +68,6 @@ export default {
             csvInput: false,
             listId: false,
             importData: {},
-            fullUnitToUnit: {
-                ounce: 'oz', ounces: 'oz', oz: 'oz', pound: 'lb', pounds: 'lb', lb: 'lb', lbs: 'lb', gram: 'g', grams: 'g', g: 'g', kilogram: 'kg', kilograms: 'kg', kg: 'kg', kgs: 'kg',
-            },
             shown: false,
         };
     },
@@ -103,58 +110,8 @@ export default {
 
             reader.readAsText(file);
         },
-        CSVToArray(strData) {
-            const strDelimiter = ',';
-            const arrData = [[]];
-            let arrMatches = null;
-
-
-            const objPattern = new RegExp(
-                (
-                    `(\\${strDelimiter}|\\r?\\n|\\r|^)`
-                    + '(?:"([^"]*(?:""[^"]*)*)"|'
-                    + `([^"\\${strDelimiter}\\r\\n]*))`
-                ), 'gi',
-            );
-
-            while (arrMatches = objPattern.exec(strData)) {
-                const strMatchedDelimiter = arrMatches[1];
-                if (strMatchedDelimiter.length && (strMatchedDelimiter != strDelimiter)) {
-                    arrData.push([]);
-                }
-
-                if (arrMatches[2]) {
-                    var strMatchedValue = arrMatches[2].replace(new RegExp('""', 'g'), '"');
-                } else {
-                    var strMatchedValue = arrMatches[3];
-                }
-
-                arrData[arrData.length - 1].push(strMatchedValue);
-            }
-
-            return arrData;
-        },
         validateImport(input, name) {
-            const csv = this.CSVToArray(input);
-            this.importData = { data: [], name };
-
-            for (const i in csv) {
-                const row = csv[i];
-                if (row.length < 6) continue;
-                if (row[0].toLowerCase() == 'item name') continue;
-                if (isNaN(parseInt(row[3]))) continue;
-                if (isNaN(parseInt(row[4]))) continue;
-                if (typeof this.fullUnitToUnit[row[5]] === 'undefined') continue;
-
-                this.importData.data.push({
-                    name: row[0],
-                    category: row[1],
-                    description: row[2],
-                    qty: parseFloat(row[3]),
-                    weight: parseFloat(row[4]),
-                    unit: this.fullUnitToUnit[row[5]],
-                });
-            }
+            this.importData = csvImport.parseCsvImport(input, name);
 
             if (!this.importData.data.length) {
                 alert('Unable to load spreadsheet - please verify the format.');

@@ -270,9 +270,13 @@ const store = new Vuex.Store({
 
                 item.name = row.name;
                 item.description = row.description;
+                item.url = row.url || '';
+                item.price = parseFloat(row.price) || 0;
                 categoryItem.qty = parseFloat(row.qty);
                 item.weight = weightUtils.WeightToMg(parseFloat(row.weight), row.unit);
                 item.authorUnit = row.unit;
+                categoryItem.worn = !!row.worn;
+                categoryItem.consumable = !!row.consumable;
                 category.name = row.category;
                 item.gearTags = row.category ? [row.category] : [];
             }

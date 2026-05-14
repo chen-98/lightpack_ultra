@@ -51,6 +51,22 @@ npm run dev
 
 Open http://localhost:8080.
 
+Migrating from original LighterPack
+-----------------------------------
+
+For the beta migration path, move one list at a time with CSV:
+
+1. Open the list in the original LighterPack site.
+2. Export the list to CSV.
+3. In this fork, click Import CSV.
+4. Review the preview and import the list.
+
+The CSV importer preserves item name, category, description, quantity, weight,
+unit, URL, price, worn, and consumable values from the original CSV export.
+Current migration is limited to a single list CSV. It does not migrate accounts,
+images, multiple lists at once, or remote login state. Images can be added later
+through an image URL or upload.
+
 Useful commands:
 
 ```sh
