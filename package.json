@@ -19,9 +19,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/galenmaly/lighterpack"
+    "url": "TODO: replace with this fork's public repository URL before beta"
   },
-  "author": "",
+  "author": "Based on LighterPack by Galen Maly and contributors; AI-assisted modernization with Codex",
   "license": "GPL-2.0",
   "dependencies": {
     "@babel/core": "7.12.10",

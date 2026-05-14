@@ -233,9 +233,9 @@ router.post('/forgotPassword', (req, res) => {
                     const message = `Hello ${username},\n Apparently you forgot your password. Here's your new one: \n\n Username: ${username}\n Password: ${newPassword}\n\n If you continue to have problems, please reply to this email with details.\n\n Thanks!`;
 
                     const mailOptions = {
-                        from: 'LighterPack <info@mg.lighterpack.com>',
+                        from: 'LighterPack <920158928@qq.com>',
                         to: email,
-                        'h:Reply-To': 'LighterPack <info@lighterpack.com>',
+                        'h:Reply-To': 'LighterPack <920158928@qq.com>',
                         subject: 'Your new LighterPack password',
                         text: message,
                     };
@@ -280,9 +280,9 @@ router.post('/forgotUsername', (req, res) => {
         const message = `Hello ${username},\n Apparently you forgot your username. Here It is: \n\n Username: ${username}\n\n If you continue to have problems, please reply to this email with details.\n\n Thanks!`;
 
         const mailOptions = {
-            from: 'LighterPack <info@mg.lighterpack.com>',
+            from: 'LighterPack <920158928@qq.com>',
             to: email,
-            'h:Reply-To': 'LighterPack <info@lighterpack.com>',
+            'h:Reply-To': 'LighterPack <920158928@qq.com>',
             subject: 'Your LighterPack username',
             text: message,
         };

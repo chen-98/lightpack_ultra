@@ -18,6 +18,7 @@
 
 | 日期 | 对应目标/任务 | 改动内容 | 验证方式 | Commit |
 | --- | --- | --- | --- | --- |
+| 2026-05-14 | P0-BRANDING: fork 维护、联系入口和 attribution | 将 README、贡献指南、package metadata、产品页脚、欢迎/登录/help/错误页和邮件 Reply-To 的当前维护联系入口统一为 `920158928@qq.com`；保留 GPL-2.0 和原项目作者/贡献者 attribution；仓库 URL 在真实 fork 地址确认前使用明确 TODO 占位 | `npm run check`; `git diff --check`; `rg "galenmaly\|Galen\|info@lighterpack.com\|lighterpack.com\|github.com/galenmaly\|Site by\|Contact"` | `docs: update fork attribution and contact` |
 | 2026-05-14 | 发布范围控制；Post-release backlog | 将完整 JSON 迁移、原站 URL 自动导入、账号迁移、图片 provider 替换、结构化反馈、API contract、保存 schema、TripPlan、推荐、视觉重设计和依赖升级归档为发布后任务，避免周末 beta 前继续扩展范围 | `git diff --check` | `docs: archive post-release backlog` |
 | 2026-05-14 | Release Feedback Entry；Beta feedback strategy | 在产品内新增静态 `Feedback` 入口和反馈说明弹窗，使用 owner 指定邮箱 `920158928@qq.com` 与 `mailto:`，提示用户附带问题描述、截图、清单分享链接、浏览器设备信息和复现步骤；未新增后端 API、邮件发送、截图上传、数据库或依赖 | `npm run check`; `git diff --check`; 新增定向 Playwright 覆盖，本机因缺少 MongoDB 未完成运行 | `feat: add static feedback entry` |
 | 2026-05-14 | Release Feedback Entry；产品哲学: Beta feedback strategy | 记录发布前反馈入口采用静态邮箱和 `mailto:` 的低风险方案；明确当前不新增反馈 API、邮件发送、截图上传、数据库或工单系统，并保留后续结构化反馈扩展方向 | `git diff --check` | `docs: document beta feedback entry` |

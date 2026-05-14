@@ -2,6 +2,15 @@ LighterPack
 ===========
 LighterPack helps you track the gear you bring on adventures.
 
+Fork status
+-----------
+
+This fork is currently maintained for beta release work. For support, bug
+reports, or beta feedback, contact 920158928@qq.com.
+
+Based on LighterPack by Galen Maly and contributors. This fork keeps the
+project under the GPL-2.0 license.
+
 Project planning
 ----------------
 

@@ -10,8 +10,9 @@ RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -qy \
   npm \
   python-pip
 
-# Download git repo
-RUN git clone https://github.com/galenmaly/lighterpack.git /var/www/lighterpack
+# Download git repo. Pass this fork's public repository URL at build time.
+ARG LIGHTERPACK_REPOSITORY_URL
+RUN test -n "$LIGHTERPACK_REPOSITORY_URL" && git clone "$LIGHTERPACK_REPOSITORY_URL" /var/www/lighterpack
 
 # Move to the directory so we install the libraries in correct folder
 RUN cd /var/www/lighterpack && npm install
