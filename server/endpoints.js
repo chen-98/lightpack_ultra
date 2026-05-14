@@ -29,6 +29,8 @@ const Item = dataTypes.Item;
 const Category = dataTypes.Category;
 const List = dataTypes.List;
 const Library = dataTypes.Library;
+const MAX_IMAGE_UPLOAD_BYTES = 2500000;
+const ALLOWED_IMAGE_UPLOAD_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
 
 // one day in many years this can go away.
 eval(`${fs.readFileSync(path.join(__dirname, './sha3.js'))}`);
@@ -404,6 +406,17 @@ function handleParsedImageUpload(req, res, files, options = {}) {
         return res.status(400).json({ message: 'We could not read that image upload. Please try again.' });
     }
 
+    if (typeof image.size !== 'undefined' && image.size > MAX_IMAGE_UPLOAD_BYTES) {
+        logWithRequest(req, { message: 'Image upload rejected for size', size: image.size });
+        return res.status(400).json({ message: 'Please upload a file less than 2.5mb.' });
+    }
+
+    const imageType = image.type || image.mimetype;
+    if (!imageType || ALLOWED_IMAGE_UPLOAD_TYPES.indexOf(imageType) === -1) {
+        logWithRequest(req, { message: 'Image upload rejected for type', type: imageType });
+        return res.status(400).json({ message: 'Please upload a PNG, JPG, or GIF image.' });
+    }
+
     const imgurClientID = typeof options.imgurClientID === 'undefined' ? config.get('imgurClientID') : options.imgurClientID;
     if (!imgurClientID) {
         logWithRequest(req, 'Image upload attempted without imgurClientID');
@@ -421,6 +434,7 @@ function handleParsedImageUpload(req, res, files, options = {}) {
         url: 'https://api.imgur.com/3/image',
         headers: { Authorization: `Client-ID ${imgurClientID}` },
         formData,
+        timeout: 10000,
     }, (err, response, body) => {
         if (err) {
             logWithRequest(req, { message: 'Imgur upload request failed', error: err });

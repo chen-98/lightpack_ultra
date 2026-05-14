@@ -18,6 +18,7 @@
 
 | 日期 | 对应目标/任务 | 改动内容 | 验证方式 | Commit |
 | --- | --- | --- | --- | --- |
+| 2026-05-14 | P1: 后端接口整理；核心服务可靠性: 图片上传；IMG-1: Imgur 上传链路发布前加固 | 保留 Imgur provider 和现有图片数据结构；服务端增加 2.5MB 文件大小校验、PNG/JPG/GIF MIME 校验和 Imgur 请求 10 秒 timeout；前端上传完成或失败后清空 file input，并强化失败时可改用图片 URL 的提示 | `npm run test:unit`; `npm run check` | `fix: harden imgur upload validation` |
 | 2026-05-10 | Task 0.1: 维护基线；工程边界: 文档与追溯；项目风格约定: 小步提交和可追溯 | 更新 npm scripts 以支持现代 Node/OpenSSL；新增本地配置样例；更新 README；新增现代化计划和改动日志规则；将开发 HMR 地址改为 `localhost:8080` | `npm run check` | `chore: establish modernization baseline` |
 | 2026-05-10 | Task 1.1: 测试工具选择 | 新增 `npm run test:unit`；使用 Node 内置 `node:test` 建立单元测试基线；将 `npm run check` 扩展为先跑单元测试再构建 | `npm run test:unit`; `npm run check` | `test: add unit test baseline` |
 | 2026-05-10 | Task 2.1: 空输入和自动创建行为调查 | 记录 list/category/item 自动创建路径；定义无意义空 item；明确统计、保存、分享页和 CSV 的处理决策 | 人工检查文档 | `docs: document empty input behavior` |

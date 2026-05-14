@@ -18,7 +18,7 @@
                     <h2>Upload image from disk</h2>
                     <template v-if="!item.image">
                         <p class="imageUploadDescription">
-                            Your image will be hosted on imgur.
+                            Your image will be hosted on Imgur. If upload fails, add the image by URL instead.
                         </p>
                         <button id="itemImageUpload" class="lpButton" @click="triggerImageUpload">
                             Upload Image
@@ -78,14 +78,21 @@ export default {
         triggerImageUpload() {
             this.$refs.imageInput.click();
         },
+        resetImageInput() {
+            if (this.$refs.imageInput) {
+                this.$refs.imageInput.value = '';
+            }
+        },
         uploadImage(evt) {
             this.uploadError = '';
             if (!FormData) {
                 this.uploadError = 'Your browser is not supported for file uploads. Please update to a more modern browser.';
+                this.resetImageInput();
                 return;
             }
             const file = evt.target.files[0];
             if (!file) {
+                this.resetImageInput();
                 return;
             }
             const name = file.name;
@@ -93,14 +100,17 @@ export default {
             const type = file.type;
 
             if (name.length < 1) {
+                this.resetImageInput();
                 return;
             }
             if (size > 2500000) {
                 this.uploadError = 'Please upload a file less than 2.5mb.';
+                this.resetImageInput();
                 return;
             }
             if (['image/png', 'image/jpg', 'image/jpeg', 'image/gif'].indexOf(type) === -1) {
                 this.uploadError = 'Please upload a PNG, JPG, or GIF image.';
+                this.resetImageInput();
                 return;
             }
             const formData = new FormData(this.$refs.imageUploadForm);
@@ -116,9 +126,11 @@ export default {
                     this.uploading = false;
                     this.$store.commit('updateItemImage', { image: response.data.id, item: this.item });
                     this.shown = false;
+                    this.resetImageInput();
                 }).catch((response) => {
                     this.uploading = false;
                     this.uploadError = response.message || 'Upload failed. Please try again later or add the image by URL.';
+                    this.resetImageInput();
                 });
         },
         removeItemImage() {
