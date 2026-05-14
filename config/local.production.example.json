@@ -1,0 +1,14 @@
+{
+    "environment": "production",
+    "deployUrl": "https://your-domain.example.com",
+    "publicUrl": "https://your-domain.example.com",
+    "port": 3000,
+    "devServerPort": 8080,
+    "bindings": ["0.0.0.0"],
+    "databaseUrl": "mongodb://mongo:27017/lighterpack",
+    "imgurClientID": "",
+    "mailgunDomain": "",
+    "mailgunBaseURL": "",
+    "mailgunAPIKey": "",
+    "moderators": []
+}

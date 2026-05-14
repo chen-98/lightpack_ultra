@@ -2,7 +2,11 @@ extIds.txt
 node_modules
 data/
 .DS_Store
+.env
+/Caddyfile
 /config/local.json
+/backups/
+/mongo-data/
 /public/dist/*
 app.sublime-project
 app.sublime-workspace
