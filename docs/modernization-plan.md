@@ -128,6 +128,25 @@
 - 用户可以审查并修改建议。
 - 没有 AI 依赖时核心流程仍可运行。
 
+## Post-release Backlog
+
+以下需求不进入本周末 beta 发布范围。发布前只保留低风险、能直接改善试用反馈质量的改动；这些任务等第一轮真实反馈、部署稳定性和数据安全验证后再择机推进。
+
+| ID | 需求 | 暂缓原因 | 建议时机 |
+| --- | --- | --- | --- |
+| P1-MIGRATION-JSON | 完整 library JSON export/import | 比 CSV 更完整，但涉及数据结构、兼容、隐私和恢复策略 | 发布后第一轮反馈后 |
+| P2-MIGRATION-REMOTE | 输入原网站 share URL 自动抓取导入 | 涉及远程请求、失败处理、CORS/网络、原站可用性和安全边界 | CSV 迁移稳定后 |
+| P2-ACCOUNT-MIGRATION | 原网站账号级迁移 | 没有原站数据库或认证权限时不可真正无缝，风险高 | 暂不做，除非后续获得可靠数据源或授权路径 |
+| IMG-PROVIDER-REPLACE | Cloudinary、Cloudflare 或 S3 替换 Imgur | 当前已做 Imgur 加固；替换会打开存储、成本、迁移、删除策略和 provider lock-in | 发布后根据图片使用量和失败率评估 |
+| FEEDBACK-FORM | 内建反馈表单和后端发邮件 | 已选择静态 `mailto:`；表单会引入 spam、防滥用、邮件失败处理和后端配置 | 反馈量上来后 |
+| FEEDBACK-TRACKER | 反馈入库、工单状态、截图上传 | 范围过大，不服务周末发布 | 有稳定用户量后 |
+| API-CONTRACT | 完整 API contract/schema 文档 | 维护价值高，但不是发布 blocker | 发布后 P1 |
+| SAVE-SCHEMA | `/saveLibrary` 完整 schema validator | 有价值但可能影响保存路径，发布前风险偏高 | 发布后小步做 |
+| TRIPPLAN | TripPlan 数据模型和 UI | 新数据模型会扩大保存兼容和 UI 范围，发布前不加 | 用户反馈确认需要后 |
+| RECOMMENDATION | 规则推荐或 AI 推荐 | 依赖真实数据、稳定模型和推荐反馈闭环 | TripPlan 和数据边界稳定后 |
+| UI-REDESIGN | 大规模视觉重设计 | 非核心，容易引入回归 | 暂不做，先观察核心流程反馈 |
+| DEP-UPGRADE | 依赖或框架升级 | 发布前风险高，容易干扰产品反馈 | 单独维护周期 |
+
 ## 项目约定
 
 | 方向 | 约定 |
