@@ -1,0 +1,16 @@
+# Copy this file to ./Caddyfile and keep exactly one site block active.
+
+# Option 1: temporary HTTP/IP test before the domain is ready.
+# Visit http://SERVER_IP/. This does not enable HTTPS for an IP address.
+:80 {
+    reverse_proxy app:3000
+}
+
+# Option 2: production domain.
+# After DNS points at this server and ports 80/443 are reachable, comment out
+# the :80 block above and uncomment this domain block. Caddy will request and
+# renew HTTPS certificates automatically.
+#
+# your-domain.example.com {
+#     reverse_proxy app:3000
+# }

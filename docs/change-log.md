@@ -18,6 +18,7 @@
 
 | 日期 | 对应目标/任务 | 改动内容 | 验证方式 | Commit |
 | --- | --- | --- | --- | --- |
+| 2026-05-14 | DEPLOY-DOCS: Docker Compose beta deployment | 新增 Dockerfile、Docker Compose、Caddy 示例、生产配置样例、MongoDB 备份脚本和部署文档；明确 app/mongo/caddy 架构、IP 临时测试、域名 HTTPS 切换、备份和回滚流程；忽略生产私有配置、备份和本地 Mongo 数据目录 | `npm run check`; `git diff --check`; `config/local.production.example.json` JSON parse | `docs: add docker compose deployment guide` |
 | 2026-05-14 | P0-MIGRATION-CSV；发布前 CSV 迁移 MVP | 强化 CSV import：优先按 header 映射原 LighterPack 10 列导出，继续兼容旧 6 列；导入 URL、price、worn、consumable；补充迁移说明和 CSV parser 单元测试 | `npm run test:unit`; `npm run check` | `feat: improve csv migration import` |
 | 2026-05-14 | P0-BRANDING: fork 维护、联系入口和 attribution | 将 README、贡献指南、package metadata、产品页脚、欢迎/登录/help/错误页和邮件 Reply-To 的当前维护联系入口统一为 `920158928@qq.com`；保留 GPL-2.0 和原项目作者/贡献者 attribution；仓库 URL 在真实 fork 地址确认前使用明确 TODO 占位 | `npm run check`; `git diff --check`; `rg "galenmaly\|Galen\|info@lighterpack.com\|lighterpack.com\|github.com/galenmaly\|Site by\|Contact"` | `docs: update fork attribution and contact` |
 | 2026-05-14 | 发布范围控制；Post-release backlog | 将完整 JSON 迁移、原站 URL 自动导入、账号迁移、图片 provider 替换、结构化反馈、API contract、保存 schema、TripPlan、推荐、视觉重设计和依赖升级归档为发布后任务，避免周末 beta 前继续扩展范围 | `git diff --check` | `docs: archive post-release backlog` |

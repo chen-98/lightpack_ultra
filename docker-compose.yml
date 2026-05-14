@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    volumes:
+      - ./config/local.json:/app/config/local.json:ro
+    networks:
+      - lighterpack
+
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - lighterpack
+
+  caddy:
+    image: caddy:2
+    depends_on:
+      - app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - lighterpack
+
+networks:
+  lighterpack:
+
+volumes:
+  mongo_data:
+  caddy_data:
+  caddy_config:
