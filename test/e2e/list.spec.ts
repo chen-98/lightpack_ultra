@@ -151,4 +151,29 @@ test.describe('List tests', () => {
     await expect(libraryItem).toContainText('Added');
     await expect(libraryItem.locator('.lpLibraryItemHandle')).toHaveCount(0);
   });
+
+  test('should show static beta feedback instructions', async ({ page }) => {
+    const now = Date.now();
+    const username = `feedback${now}`;
+    const email = `feedback+${now}@lighterpack.com`;
+    const password = 'testtest';
+
+    await registerUser(page, username, password, email);
+
+    await page.locator('#lpFooter a', { hasText: 'Feedback' }).click();
+
+    await expect(page.locator('#feedback')).toBeVisible();
+    await expect(page.locator('#feedback')).toContainText('Bug reports and improvement ideas');
+    await expect(page.locator('#feedback')).toContainText('A shared list link');
+    await expect(page.locator('#feedback a[href="mailto:info@lighterpack.com?subject=LighterPack%20beta%20feedback"]')).toHaveCount(2);
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#feedback')).toBeHidden();
+
+    await page.locator('.lpCategoryName').first().fill('Shelter');
+    await page.locator('.lpAddItem').first().click();
+    await page.locator('.lpItem input.lpName').first().fill('Tent');
+
+    await expect(page.locator('.lpItem input.lpName').first()).toHaveValue('Tent');
+  });
 });

@@ -77,6 +77,7 @@
 
 - 产品内有可见但不打扰的 feedback 入口。
 - 反馈说明包含邮箱、建议附带的问题信息、截图提示和清单分享链接提示。
+- 点击入口会打开轻量弹窗，并提供 subject 为 `LighterPack beta feedback` 的 `mailto:` 链接。
 - 可以提供 `mailto:` 链接，但不新增 API、不改变 saved library JSON、不引入邮件发送依赖。
 - `npm run check` 通过。
 

@@ -119,6 +119,8 @@
                     <a class="lpHref" href="https://github.com/galenmaly/lighterpack" target="_blank" rel="noopener noreferrer">Copyleft</a> LighterPack 2019
                     -
                     <a class="lpHref" href="mailto:info@lighterpack.com">Contact</a>
+                    -
+                    <a class="lpHref" href="mailto:info@lighterpack.com?subject=LighterPack%20beta%20feedback" @click.prevent="showFeedback">Feedback</a>
                 </div>
             </div>
         </div>
@@ -131,6 +133,7 @@
         <itemViewImage />
         <itemLink />
         <help />
+        <feedback />
         <account />
         <accountDelete />
     </div>
@@ -146,6 +149,7 @@ import forgotPassword from './forgot-password.vue';
 import account from '../components/account.vue';
 import accountDelete from '../components/account-delete.vue';
 import help from '../components/help.vue';
+import feedback from '../components/feedback.vue';
 import list from '../components/list.vue';
 
 import itemImage from '../components/item-image.vue';
@@ -166,6 +170,7 @@ export default {
         account,
         accountDelete,
         help,
+        feedback,
         list,
         itemLink,
         copyList,
@@ -220,6 +225,9 @@ export default {
         },
         updateListName(evt) {
             this.$store.commit('updateListName', { id: this.list.id, name: evt.target.value });
+        },
+        showFeedback() {
+            bus.$emit('showFeedback');
         },
     },
 };
