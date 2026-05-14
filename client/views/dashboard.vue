@@ -120,7 +120,7 @@
                     -
                     <a class="lpHref" href="mailto:info@lighterpack.com">Contact</a>
                     -
-                    <a class="lpHref" href="mailto:info@lighterpack.com?subject=LighterPack%20beta%20feedback" @click.prevent="showFeedback">Feedback</a>
+                    <a class="lpHref" href="mailto:920158928@qq.com?subject=LighterPack%20beta%20feedback" @click.prevent="showFeedback">Feedback</a>
                 </div>
             </div>
         </div>

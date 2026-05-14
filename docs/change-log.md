@@ -18,7 +18,7 @@
 
 | 日期 | 对应目标/任务 | 改动内容 | 验证方式 | Commit |
 | --- | --- | --- | --- | --- |
-| 2026-05-14 | Release Feedback Entry；Beta feedback strategy | 在产品内新增静态 `Feedback` 入口和反馈说明弹窗，复用现有邮箱与 `mailto:`，提示用户附带问题描述、截图、清单分享链接、浏览器设备信息和复现步骤；未新增后端 API、邮件发送、截图上传、数据库或依赖 | `npm run check`; `git diff --check`; 新增定向 Playwright 覆盖，本机因缺少 MongoDB 未完成运行 | `feat: add static feedback entry` |
+| 2026-05-14 | Release Feedback Entry；Beta feedback strategy | 在产品内新增静态 `Feedback` 入口和反馈说明弹窗，使用 owner 指定邮箱 `920158928@qq.com` 与 `mailto:`，提示用户附带问题描述、截图、清单分享链接、浏览器设备信息和复现步骤；未新增后端 API、邮件发送、截图上传、数据库或依赖 | `npm run check`; `git diff --check`; 新增定向 Playwright 覆盖，本机因缺少 MongoDB 未完成运行 | `feat: add static feedback entry` |
 | 2026-05-14 | Release Feedback Entry；产品哲学: Beta feedback strategy | 记录发布前反馈入口采用静态邮箱和 `mailto:` 的低风险方案；明确当前不新增反馈 API、邮件发送、截图上传、数据库或工单系统，并保留后续结构化反馈扩展方向 | `git diff --check` | `docs: document beta feedback entry` |
 | 2026-05-14 | P1: 后端接口整理；核心服务可靠性: 图片上传；IMG-1: Imgur 上传链路发布前加固 | 保留 Imgur provider 和现有图片数据结构；服务端增加 2.5MB 文件大小校验、PNG/JPG/GIF MIME 校验和 Imgur 请求 10 秒 timeout；前端上传完成或失败后清空 file input，并强化失败时可改用图片 URL 的提示 | `npm run test:unit`; `npm run check` | `fix: harden imgur upload validation` |
 | 2026-05-10 | Task 0.1: 维护基线；工程边界: 文档与追溯；项目风格约定: 小步提交和可追溯 | 更新 npm scripts 以支持现代 Node/OpenSSL；新增本地配置样例；更新 README；新增现代化计划和改动日志规则；将开发 HMR 地址改为 `localhost:8080` | `npm run check` | `chore: establish modernization baseline` |

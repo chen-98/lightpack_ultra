@@ -13,7 +13,7 @@
         <p>Bug reports and improvement ideas are both welcome during beta.</p>
         <p>
             Email
-            <a class="lpHref" href="mailto:info@lighterpack.com?subject=LighterPack%20beta%20feedback">info@lighterpack.com</a>
+            <a class="lpHref" href="mailto:920158928@qq.com?subject=LighterPack%20beta%20feedback">920158928@qq.com</a>
             or use the button below.
         </p>
         <p>Helpful details to include:</p>
@@ -25,7 +25,7 @@
             <li>Your browser and device information</li>
         </ul>
         <p>
-            <a class="lpButton" href="mailto:info@lighterpack.com?subject=LighterPack%20beta%20feedback">Email feedback</a>
+            <a class="lpButton" href="mailto:920158928@qq.com?subject=LighterPack%20beta%20feedback">Email feedback</a>
         </p>
     </modal>
 </template>

@@ -165,7 +165,8 @@ test.describe('List tests', () => {
     await expect(page.locator('#feedback')).toBeVisible();
     await expect(page.locator('#feedback')).toContainText('Bug reports and improvement ideas');
     await expect(page.locator('#feedback')).toContainText('A shared list link');
-    await expect(page.locator('#feedback a[href="mailto:info@lighterpack.com?subject=LighterPack%20beta%20feedback"]')).toHaveCount(2);
+    await expect(page.locator('#feedback')).toContainText('920158928@qq.com');
+    await expect(page.locator('#feedback a[href="mailto:920158928@qq.com?subject=LighterPack%20beta%20feedback"]')).toHaveCount(2);
 
     await page.keyboard.press('Escape');
     await expect(page.locator('#feedback')).toBeHidden();
