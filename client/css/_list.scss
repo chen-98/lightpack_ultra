@@ -130,10 +130,12 @@ input.lpCategoryName { /* specificity */
     .lpTagsCell {
         flex: 0 0 110px;
         margin-right: 4px;
-
-        .lpTags {
-            width: 100%;
-        }
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        cursor: text;
+        min-height: 24px;
+        min-width: 0;
     }
 
     .lpActionsCell {

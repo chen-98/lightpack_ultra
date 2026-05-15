@@ -23,6 +23,51 @@
     }
 }
 
+.lpTagBadge {
+    display: inline-flex;
+    align-items: center;
+    background: #e8f0fe;
+    border: 1px solid #c4d8f0;
+    border-radius: 3px;
+    padding: 0 4px;
+    margin: 1px 2px;
+    font-size: 11px;
+    line-height: 18px;
+    color: #333;
+    white-space: nowrap;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+
+.lpTagRemove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 2px;
+    padding: 0 1px;
+    color: #999;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+
+    &:hover {
+        color: #ce1836;
+    }
+}
+
+.lpTagInput {
+    border: none !important;
+    outline: none;
+    background: transparent;
+    min-width: 50px;
+    width: 50px;
+    flex: 1 1 50px;
+    font-size: 11px;
+    padding: 2px 3px;
+}
+
 .lpArrows {
     display: inline-block;
     height: 14px;
@@ -61,8 +106,24 @@
         </span>
         <input v-model="item.name" v-focus-on-create="categoryItem._isNew" type="text" class="lpName lpSilent" placeholder="Name" @input="saveItem" @paste="pasteItems">
         <input v-model="item.description" type="text" class="lpDescription lpSilent" placeholder="Description" @input="saveItem">
-        <span class="lpTagsCell">
-            <input v-model="displayTags" type="text" class="lpTags lpSilent" placeholder="Tags" @input="saveTags">
+        <span class="lpTagsCell" @click="focusTagInput">
+            <span v-for="tag in normalizedTags" :key="tag" class="lpTagBadge">
+                {{ tag }}
+                <button type="button" class="lpTagRemove" @mousedown.prevent.stop @click.stop="removeTag(tag)">×</button>
+            </span>
+            <input
+                ref="tagInput"
+                v-model="tagInputText"
+                type="text"
+                class="lpTagInput lpSilent"
+                :placeholder="normalizedTags.length ? '' : 'Add tag...'"
+                @keydown.enter.prevent="confirmTagFromKey($event)"
+                @keydown="handleTagKeydown"
+                @input="handleTagInput"
+                @blur="confirmTag"
+                @compositionstart="composing = true"
+                @compositionend="onCompositionEnd"
+            >
         </span>
         <span class="lpActionsCell">
             <i class="lpSprite lpCamera" title="Upload a photo or use a photo from the web" @click="updateItemImage" />
@@ -94,6 +155,7 @@
 <script>
 import unitSelect from './unit-select.vue';
 
+const { normalizeGearTags } = require('../dataTypes.js');
 const utilsMixin = require('../mixins/utils-mixin.js');
 const weightUtils = require('../utils/weight.js');
 const { parseQuickEntryRows } = require('../utils/quick-entry.js');
@@ -113,7 +175,8 @@ export default {
             weightError: false,
             priceError: false,
             qtyError: false,
-            displayTags: '',
+            tagInputText: '',
+            composing: false,
             numStars: 4,
         };
     },
@@ -128,6 +191,9 @@ export default {
         },
         categoryItem() {
             return Vue.util.extend({}, this.itemContainer.categoryItem);
+        },
+        normalizedTags() {
+            return normalizeGearTags(this.item.gearTags);
         },
         thumbnailImage() {
             if (this.item.image) {
@@ -149,7 +215,6 @@ export default {
     watch: {
         item() {
             this.setDisplayWeight();
-            this.setDisplayTags();
         },
         categoryItem() {
             this.setDisplayQty();
@@ -159,15 +224,58 @@ export default {
         this.setDisplayWeight();
         this.setDisplayPrice();
         this.setDisplayQty();
-        this.setDisplayTags();
     },
     methods: {
         saveItem() {
             this.$store.commit('updateItem', this.item);
         },
-        saveTags() {
-            this.item.gearTags = this.displayTags.split(',');
-            this.saveItem();
+        confirmTag() {
+            if (this.composing) return;
+            const newTags = this.tagInputText
+                .split(/[,，]+/)
+                .map(t => t.trim())
+                .filter(Boolean);
+            if (!newTags.length) {
+                this.tagInputText = '';
+                return;
+            }
+            const item = this.item;
+            item.gearTags = normalizeGearTags([...(item.gearTags || []), ...newTags]);
+            this.$store.commit('updateItem', item);
+            this.tagInputText = '';
+        },
+        confirmTagFromKey(evt) {
+            if (evt.isComposing || evt.keyCode === 229) return;
+            this.confirmTag();
+        },
+        handleTagInput() {
+            if (this.composing) return;
+            if (/[,，]$/.test(this.tagInputText)) {
+                this.confirmTag();
+            }
+        },
+        handleTagKeydown(evt) {
+            if (evt.key === 'Backspace' && !this.tagInputText && !this.composing) {
+                const tags = this.normalizedTags;
+                if (tags.length) {
+                    this.removeTag(tags[tags.length - 1]);
+                }
+            }
+        },
+        removeTag(tagToRemove) {
+            const item = this.item;
+            const lowerTarget = tagToRemove.toLowerCase();
+            item.gearTags = (item.gearTags || []).filter(t => t.trim().toLowerCase() !== lowerTarget);
+            this.$store.commit('updateItem', item);
+        },
+        focusTagInput() {
+            if (this.$refs.tagInput) {
+                this.$refs.tagInput.focus();
+            }
+        },
+        onCompositionEnd() {
+            this.composing = false;
+            this.handleTagInput();
         },
         pasteItems(evt) {
             const text = evt.clipboardData && evt.clipboardData.getData('text');
@@ -244,9 +352,6 @@ export default {
         },
         setDisplayWeight() {
             this.displayWeight = weightUtils.MgToWeight(this.item.weight, this.item.authorUnit);
-        },
-        setDisplayTags() {
-            this.displayTags = (this.item.gearTags || []).join(', ');
         },
         updateItemLink() {
             bus.$emit('updateItemLink', this.item);
