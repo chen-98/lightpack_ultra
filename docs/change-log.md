@@ -18,6 +18,7 @@
 
 | 日期 | 对应目标/任务 | 改动内容 | 验证方式 | Commit |
 | --- | --- | --- | --- | --- |
+| 2026-05-15 | 运行时稳定性: mongojs 与 MongoDB 6.0 不兼容 | 将 `docker-compose.yml` 中 MongoDB 镜像从 `mongo:6` 降级至 `mongo:5`，修复 mongojs 2.x 使用已被 MongoDB 6.0 移除的 `OP_QUERY` 协议导致所有数据库操作失败（注册/登录/保存返回"username already exists"）的问题；在 `modernization-plan.md` 新增 `MONGOJS-UPGRADE` 长期 Backlog 条目和对应风险说明 | 重启容器后 `curl -X POST /register` 返回正常响应；注册功能恢复 | `fix: downgrade mongo to 5.x for mongojs compatibility` |
 | 2026-05-14 | DEPLOY-DOCS: Docker Compose beta deployment | 新增 Dockerfile、Docker Compose、Caddy 示例、生产配置样例、MongoDB 备份脚本和部署文档；明确 app/mongo/caddy 架构、IP 临时测试、域名 HTTPS 切换、备份和回滚流程；忽略生产私有配置、备份和本地 Mongo 数据目录 | `npm run check`; `git diff --check`; `config/local.production.example.json` JSON parse | `docs: add docker compose deployment guide` |
 | 2026-05-14 | P0-MIGRATION-CSV；发布前 CSV 迁移 MVP | 强化 CSV import：优先按 header 映射原 LighterPack 10 列导出，继续兼容旧 6 列；导入 URL、price、worn、consumable；补充迁移说明和 CSV parser 单元测试 | `npm run test:unit`; `npm run check` | `feat: improve csv migration import` |
 | 2026-05-14 | P0-BRANDING: fork 维护、联系入口和 attribution | 将 README、贡献指南、package metadata、产品页脚、欢迎/登录/help/错误页和邮件 Reply-To 的当前维护联系入口统一为 `920158928@qq.com`；保留 GPL-2.0 和原项目作者/贡献者 attribution；仓库 URL 在真实 fork 地址确认前使用明确 TODO 占位 | `npm run check`; `git diff --check`; `rg "galenmaly\|Galen\|info@lighterpack.com\|lighterpack.com\|github.com/galenmaly\|Site by\|Contact"` | `docs: update fork attribution and contact` |

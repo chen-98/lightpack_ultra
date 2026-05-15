@@ -145,7 +145,8 @@
 | TRIPPLAN | TripPlan 数据模型和 UI | 新数据模型会扩大保存兼容和 UI 范围，发布前不加 | 用户反馈确认需要后 |
 | RECOMMENDATION | 规则推荐或 AI 推荐 | 依赖真实数据、稳定模型和推荐反馈闭环 | TripPlan 和数据边界稳定后 |
 | UI-REDESIGN | 大规模视觉重设计 | 非核心，容易引入回归 | 暂不做，先观察核心流程反馈 |
-| DEP-UPGRADE | 依赖或框架升级 | 发布前风险高，容易干扰产品反馈 | 单独维护周期 |
+| MONGOJS-UPGRADE | 将 mongojs 2.x 替换为原生 mongodb 驱动 | mongojs 使用已被 MongoDB 6.0 移除的 OP_QUERY 协议；当前以降级 mongo:5 暂缓；切换涉及 `endpoints.js`、`auth.js`、`views.js`、`moderation-endpoints.js` 4 个文件的全量 DB API 重写，须同步补测试 | MongoDB 5.x EOL 前或下一个依赖维护周期 |
+| DEP-UPGRADE | 依赖或框架升级（mongojs 除外，见 MONGOJS-UPGRADE） | 发布前风险高，容易干扰产品反馈 | 单独维护周期 |
 
 ## 项目约定
 
@@ -172,6 +173,7 @@
 
 | 风险 | 影响 | 缓解 |
 | --- | --- | --- |
+| mongojs 2.x 与 MongoDB 6.0 协议不兼容 | mongojs 使用已被 MongoDB 6.0 移除的 OP_QUERY；所有 DB 操作失败，注册/登录/保存全部不可用 | 临时：MongoDB 镜像降级至 5.x；长期：替换 mongojs 为原生 mongodb 驱动（见 Backlog MONGOJS-UPGRADE） |
 | 旧依赖较多 | 新 Node 或浏览器环境可能出现兼容问题 | 先固定可运行脚本，再逐步升级 |
 | 数据模型集中在前端 | 后端难以校验数据正确性 | 先补测试，再提取 schema 和 API contract |
 | 自动保存隐藏错误 | 空数据或错误数据容易被保存 | 增加保存前校验和测试 |
