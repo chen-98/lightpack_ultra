@@ -213,6 +213,10 @@ router.post('/forgotPassword', (req, res) => {
         return res.status(400).json({ errors: [{ message: 'Please enter a username.' }] });
     }
 
+    if (!mailgun) {
+        return res.status(503).json({ errors: [{ message: 'Password reset email is not configured. Please contact 920158928@qq.com to reset your password.' }] });
+    }
+
     db.users.find({ username }, (err, users) => {
         if (err) {
             logWithRequest(req, { message: 'Forgot password lookup error', username });
@@ -286,6 +290,10 @@ router.post('/forgotUsername', (req, res) => {
             subject: 'Your LighterPack username',
             text: message,
         };
+
+        if (!mailgun) {
+            return res.status(503).json({ errors: [{ message: 'Username recovery email is not configured. Please contact 920158928@qq.com to recover your username.' }] });
+        }
 
         logWithRequest(req, { message: 'Attempting to send username', email, username });
         mailgun.messages().send(mailOptions, (error, response) => {
