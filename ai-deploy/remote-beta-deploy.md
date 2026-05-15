@@ -21,21 +21,21 @@ completed so deployment progress stays visible and auditable.
 
 Fill these in on the server:
 
-- Server public IP:
-- Domain:
-- Deployment path:
-- Branch:
-- Commit:
-- Current access mode: `IP HTTP` / `Domain HTTPS`
-- Date/time:
+- Server public IP: SERVER_IP
+- Domain: (not yet configured)
+- Deployment path: /opt/lightpack_ultra
+- Branch: codex/modernization-baseline
+- Commit: 3b1b380
+- Current access mode: `IP HTTP`
+- Date/time: 2026-05-15 10:35 CST
 
 ## Checklist
 
 ### 1. Confirm Repository State
 
-- [ ] Confirm current directory is the repository root.
-- [ ] Confirm branch and latest commit.
-- [ ] Confirm working tree status.
+- [x] Confirm current directory is the repository root.
+- [x] Confirm branch and latest commit.
+- [x] Confirm working tree status.
 
 Commands:
 
@@ -53,11 +53,11 @@ Expected:
 
 ### 2. Read Deployment Files
 
-- [ ] Read deployment guide.
-- [ ] Inspect Compose services.
-- [ ] Inspect Dockerfile.
-- [ ] Inspect Caddy example.
-- [ ] Inspect production config example.
+- [x] Read deployment guide.
+- [x] Inspect Compose services.
+- [x] Inspect Dockerfile.
+- [x] Inspect Caddy example.
+- [x] Inspect production config example.
 
 Commands:
 
@@ -79,14 +79,14 @@ Expected:
 
 ### 3. Create Private Production Config
 
-- [ ] Create `config/local.json` if missing.
-- [ ] Set `environment` to `production`.
-- [ ] Set `databaseUrl` to `mongodb://mongo:27017/lighterpack`.
-- [ ] Set `port` to `3000`.
-- [ ] Set `bindings` to `["0.0.0.0"]`.
-- [ ] Set `deployUrl` and `publicUrl` to the temporary IP URL or final domain URL.
-- [ ] Leave optional service keys empty unless real values are available.
-- [ ] Confirm `config/local.json` is ignored by Git.
+- [x] Create `config/local.json` if missing.
+- [x] Set `environment` to `production`.
+- [x] Set `databaseUrl` to `mongodb://mongo:27017/lighterpack`.
+- [x] Set `port` to `3000`.
+- [x] Set `bindings` to `["0.0.0.0"]`.
+- [x] Set `deployUrl` and `publicUrl` to the temporary IP URL or final domain URL.
+- [x] Leave optional service keys empty unless real values are available.
+- [x] Confirm `config/local.json` is ignored by Git.
 
 Commands:
 
@@ -115,10 +115,10 @@ Do not paste secret keys into this runbook.
 
 ### 4. Create Caddyfile
 
-- [ ] Create `Caddyfile` if missing.
-- [ ] If domain is not ready, use the `:80` temporary block.
+- [x] Create `Caddyfile` if missing.
+- [x] If domain is not ready, use the `:80` temporary block.
 - [ ] If domain is ready, use the real domain block.
-- [ ] Confirm `Caddyfile` is ignored by Git.
+- [x] Confirm `Caddyfile` is ignored by Git.
 
 Commands:
 
@@ -147,8 +147,8 @@ your-domain.example.com {
 
 ### 5. Prepare Backup Directory and Script
 
-- [ ] Create backup directory.
-- [ ] Ensure backup script is executable.
+- [x] Create backup directory.
+- [x] Ensure backup script is executable.
 
 Commands:
 
@@ -160,8 +160,8 @@ ls -lah scripts/backup-mongo.sh backups
 
 ### 6. Validate Compose Configuration
 
-- [ ] Run Compose config validation.
-- [ ] Stop and report if validation fails.
+- [x] Run Compose config validation.
+- [x] Stop and report if validation fails.
 
 Command:
 
@@ -176,8 +176,8 @@ Expected:
 
 ### 7. Build and Start Stack
 
-- [ ] Build and start containers.
-- [ ] Confirm service status.
+- [x] Build and start containers.
+- [x] Confirm service status.
 
 Commands:
 
@@ -194,10 +194,10 @@ Expected:
 
 ### 8. Inspect Logs
 
-- [ ] Inspect app logs.
-- [ ] Inspect MongoDB logs.
-- [ ] Inspect Caddy logs.
-- [ ] Record any warnings or errors.
+- [x] Inspect app logs.
+- [x] Inspect MongoDB logs.
+- [x] Inspect Caddy logs.
+- [x] Record any warnings or errors.
 
 Commands:
 
@@ -212,9 +212,9 @@ database connection failures, or Caddy config errors are blockers.
 
 ### 9. HTTP or HTTPS Smoke Test
 
-- [ ] Test localhost through Caddy.
-- [ ] Test public IP or domain.
-- [ ] Record HTTP status codes.
+- [x] Test localhost through Caddy.
+- [x] Test public IP or domain.
+- [x] Record HTTP status codes.
 
 Temporary IP mode:
 
@@ -253,8 +253,8 @@ Record the test username and any failed steps under **Execution Notes**.
 
 ### 11. Backup Test
 
-- [ ] Run backup script.
-- [ ] Confirm backup file exists and is non-empty.
+- [x] Run backup script.
+- [x] Confirm backup file exists and is non-empty.
 
 Commands:
 
@@ -270,13 +270,13 @@ Expected:
 
 ### 12. Final Report
 
-- [ ] Summarize current branch and commit.
-- [ ] Summarize access URL.
-- [ ] Summarize Compose service status.
-- [ ] Summarize smoke test result.
-- [ ] Summarize backup result.
-- [ ] List remaining manual tasks.
-- [ ] Do not include secret values.
+- [x] Summarize current branch and commit.
+- [x] Summarize access URL.
+- [x] Summarize Compose service status.
+- [x] Summarize smoke test result.
+- [x] Summarize backup result.
+- [x] List remaining manual tasks.
+- [x] Do not include secret values.
 
 Use this format:
 
@@ -297,6 +297,13 @@ Deployment summary:
 Append timestamped notes here as work proceeds.
 
 ```text
-YYYY-MM-DD HH:mm TZ - Started deployment.
+2026-05-15 10:35 CST - Started deployment. IP HTTP mode.
+2026-05-15 10:38 CST - Steps 1-2 complete. Repo clean on codex/modernization-baseline@3b1b380. All deployment files verified.
+2026-05-15 10:40 CST - Steps 3-5 complete. config/local.json created (IP HTTP mode). Caddyfile created (:80 block). Backup dir ready.
+2026-05-15 10:41 CST - Step 6 complete. docker compose config validated. No public ports on app or mongo.
+2026-05-15 10:43 CST - Step 7 complete. All three containers started and running.
+2026-05-15 10:43 CST - Step 8 complete. App listening on :3000, MongoDB ready, Caddy serving HTTP. No errors.
+2026-05-15 10:44 CST - Step 9 complete. curl -I http://127.0.0.1 → 200. curl -I http://SERVER_IP → 200.
+2026-05-15 10:44 CST - Step 11 complete. Backup file 20260515-104402-lighterpack.archive.gz created (116 bytes, empty DB expected).
+2026-05-15 10:45 CST - Step 10 pending: manual browser smoke test required by human operator.
 ```
-
